@@ -45,7 +45,7 @@ authRouter.post("/register", async (req, res) => {
   const token = jwt.sign(
     { userId: user.id, role: user.role },
     process.env.JWT_SECRET!,
-    { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
+    { expiresIn: "7d" }
   );
 
   res.status(201).json({ user, token });
@@ -65,7 +65,7 @@ authRouter.post("/login", async (req, res) => {
   const token = jwt.sign(
     { userId: user.id, role: user.role },
     process.env.JWT_SECRET!,
-    { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
+    { expiresIn: "7d" }
   );
 
   res.json({ user: { id: user.id, username: user.username, firstName: user.firstName, lastName: user.lastName, role: user.role }, token });
