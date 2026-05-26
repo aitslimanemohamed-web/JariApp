@@ -11,6 +11,7 @@ const translations = {
       becomeProvider: "Devenir prestataire",
       login: "Connexion",
       register: "S'inscrire",
+      logout: "Déconnexion",
     },
     auth: {
       login: {
@@ -97,6 +98,7 @@ const translations = {
       becomeProvider: "كن مزود خدمة",
       login: "تسجيل الدخول",
       register: "إنشاء حساب",
+      logout: "تسجيل الخروج",
     },
     auth: {
       login: {
@@ -183,6 +185,7 @@ const translations = {
       becomeProvider: "Become a provider",
       login: "Log in",
       register: "Sign up",
+      logout: "Log out",
     },
     auth: {
       login: {

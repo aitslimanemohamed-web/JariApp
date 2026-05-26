@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useLanguage, type Lang } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 const LANGS: { code: Lang; label: string }[] = [
   { code: "fr", label: "FR" },
@@ -10,6 +11,7 @@ const LANGS: { code: Lang; label: string }[] = [
 
 export default function Navbar() {
   const { t, lang, setLang } = useLanguage();
+  const { user, logout } = useAuth();
 
   return (
     <nav
@@ -99,35 +101,64 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Auth buttons */}
-          <Link
-            href="/login"
-            style={{
-              color: "#1B4F72",
-              fontWeight: 600,
-              fontSize: "0.9rem",
-              padding: "8px 18px",
-              borderRadius: "9px",
-              border: "1.5px solid #1B4F72",
-            }}
-            className="hover:bg-blue-50 transition-colors hidden sm:block whitespace-nowrap"
-          >
-            {t.nav.login}
-          </Link>
-          <Link
-            href="/register"
-            style={{
-              backgroundColor: "#FF6B35",
-              color: "white",
-              fontWeight: 600,
-              fontSize: "0.9rem",
-              padding: "9px 18px",
-              borderRadius: "9px",
-            }}
-            className="hover:opacity-90 transition-opacity whitespace-nowrap"
-          >
-            {t.nav.register}
-          </Link>
+          {/* Auth */}
+          {user ? (
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <div style={{
+                display: "flex", alignItems: "center", gap: "8px",
+                backgroundColor: "#FFF0EB", borderRadius: "10px",
+                padding: "7px 14px",
+              }}>
+                <div style={{
+                  width: "28px", height: "28px", borderRadius: "50%",
+                  backgroundColor: "#FF6B35", display: "flex",
+                  alignItems: "center", justifyContent: "center",
+                  color: "white", fontWeight: 700, fontSize: "0.85rem",
+                }}>
+                  {user.firstName.charAt(0).toUpperCase()}
+                </div>
+                <span style={{ color: "#FF6B35", fontWeight: 600, fontSize: "0.9rem" }}>
+                  {user.firstName}
+                </span>
+              </div>
+              <button
+                onClick={logout}
+                style={{
+                  color: "#888", fontWeight: 600, fontSize: "0.9rem",
+                  padding: "8px 14px", borderRadius: "9px",
+                  border: "1.5px solid #E5E5E5", backgroundColor: "white",
+                  cursor: "pointer",
+                }}
+              >
+                {t.nav.logout}
+              </button>
+            </div>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                style={{
+                  color: "#1B4F72", fontWeight: 600, fontSize: "0.9rem",
+                  padding: "8px 18px", borderRadius: "9px",
+                  border: "1.5px solid #1B4F72",
+                }}
+                className="hover:bg-blue-50 transition-colors hidden sm:block whitespace-nowrap"
+              >
+                {t.nav.login}
+              </Link>
+              <Link
+                href="/register"
+                style={{
+                  backgroundColor: "#FF6B35", color: "white",
+                  fontWeight: 600, fontSize: "0.9rem",
+                  padding: "9px 18px", borderRadius: "9px",
+                }}
+                className="hover:opacity-90 transition-opacity whitespace-nowrap"
+              >
+                {t.nav.register}
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>
