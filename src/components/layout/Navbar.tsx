@@ -14,88 +14,46 @@ export default function Navbar() {
   const { user, logout } = useAuth();
 
   return (
-    <nav
-      style={{ backgroundColor: "#ffffff", borderBottom: "1px solid #EBEBEB" }}
-      className="sticky top-0 z-50 shadow-sm"
-    >
-      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+    <nav style={{ backgroundColor: "#ffffff", borderBottom: "1px solid #EBEBEB", position: "sticky", top: 0, zIndex: 50, boxShadow: "0 1px 8px rgba(0,0,0,0.06)" }}>
+      <div style={{ maxWidth: "1152px", margin: "0 auto", padding: "0 16px", height: "60px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
 
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-1 shrink-0">
-          <span
-            style={{
-              backgroundColor: "#FF6B35",
-              color: "white",
-              fontWeight: 800,
-              fontSize: "1.35rem",
-              padding: "3px 11px",
-              borderRadius: "9px",
-              letterSpacing: "-0.5px",
-            }}
-          >
-            jari
-          </span>
-          <span
-            style={{
-              color: "#1B4F72",
-              fontWeight: 700,
-              fontSize: "1.35rem",
-              letterSpacing: "-0.5px",
-            }}
-          >
-            app
-          </span>
+        <Link href="/" style={{ display: "flex", alignItems: "center", gap: "2px", textDecoration: "none", flexShrink: 0 }}>
+          <span style={{
+            backgroundColor: "#FF6B35", color: "white", fontWeight: 800,
+            fontSize: "1.25rem", padding: "2px 10px", borderRadius: "8px", letterSpacing: "-0.5px",
+          }}>jari</span>
+          <span style={{ color: "#1B4F72", fontWeight: 700, fontSize: "1.25rem", letterSpacing: "-0.5px" }}>app</span>
         </Link>
 
-        {/* Nav links */}
-        <div className="hidden lg:flex items-center gap-7 flex-1 justify-center">
+        {/* Nav links — desktop only */}
+        <div style={{ display: "flex", alignItems: "center", gap: "24px", flex: 1, justifyContent: "center" }} className="hidden lg:flex">
           {[
             { href: "#services", label: t.nav.services },
             { href: "#comment-ca-marche", label: t.nav.howItWorks },
             { href: "#prestataires", label: t.nav.becomeProvider },
           ].map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              style={{ color: "#444", fontWeight: 500, fontSize: "0.95rem" }}
-              className="hover:text-orange-500 transition-colors whitespace-nowrap"
-            >
+            <Link key={link.href} href={link.href} style={{ color: "#555", fontWeight: 500, fontSize: "0.9rem", textDecoration: "none" }}>
               {link.label}
             </Link>
           ))}
         </div>
 
         {/* Right side */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
 
           {/* Language switcher */}
-          <div
-            style={{
-              backgroundColor: "#F5F5F5",
-              borderRadius: "10px",
-              padding: "3px",
-              display: "flex",
-              gap: "2px",
-            }}
-          >
+          <div style={{ backgroundColor: "#F5F5F5", borderRadius: "8px", padding: "2px", display: "flex", gap: "1px" }}>
             {LANGS.map(({ code, label }) => (
-              <button
-                key={code}
-                onClick={() => setLang(code)}
-                style={{
-                  backgroundColor: lang === code ? "white" : "transparent",
-                  color: lang === code ? "#1B4F72" : "#888",
-                  fontWeight: lang === code ? 700 : 500,
-                  fontSize: "0.8rem",
-                  padding: "4px 9px",
-                  borderRadius: "7px",
-                  border: "none",
-                  cursor: "pointer",
-                  boxShadow: lang === code ? "0 1px 4px rgba(0,0,0,0.10)" : "none",
-                  transition: "all 0.15s",
-                  minWidth: "32px",
-                }}
-              >
+              <button key={code} onClick={() => setLang(code)} style={{
+                backgroundColor: lang === code ? "white" : "transparent",
+                color: lang === code ? "#1B4F72" : "#999",
+                fontWeight: lang === code ? 700 : 500,
+                fontSize: "0.75rem", padding: "3px 7px", borderRadius: "6px",
+                border: "none", cursor: "pointer",
+                boxShadow: lang === code ? "0 1px 3px rgba(0,0,0,0.10)" : "none",
+                minWidth: "28px",
+              }}>
                 {label}
               </button>
             ))}
@@ -103,61 +61,51 @@ export default function Navbar() {
 
           {/* Auth */}
           {user ? (
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <div style={{
-                display: "flex", alignItems: "center", gap: "8px",
-                backgroundColor: "#FFF0EB", borderRadius: "10px",
-                padding: "7px 14px",
+                display: "flex", alignItems: "center", gap: "6px",
+                backgroundColor: "#FFF0EB", borderRadius: "8px", padding: "5px 10px",
               }}>
                 <div style={{
-                  width: "28px", height: "28px", borderRadius: "50%",
+                  width: "24px", height: "24px", borderRadius: "50%",
                   backgroundColor: "#FF6B35", display: "flex",
                   alignItems: "center", justifyContent: "center",
-                  color: "white", fontWeight: 700, fontSize: "0.85rem",
+                  color: "white", fontWeight: 700, fontSize: "0.75rem", flexShrink: 0,
                 }}>
                   {user.firstName.charAt(0).toUpperCase()}
                 </div>
-                <span style={{ color: "#FF6B35", fontWeight: 600, fontSize: "0.9rem" }}>
+                <span style={{ color: "#FF6B35", fontWeight: 600, fontSize: "0.85rem", whiteSpace: "nowrap" }}>
                   {user.firstName}
                 </span>
               </div>
-              <button
-                onClick={logout}
-                style={{
-                  color: "#888", fontWeight: 600, fontSize: "0.9rem",
-                  padding: "8px 14px", borderRadius: "9px",
-                  border: "1.5px solid #E5E5E5", backgroundColor: "white",
-                  cursor: "pointer",
-                }}
-              >
+              <button onClick={logout} style={{
+                color: "#888", fontWeight: 600, fontSize: "0.82rem",
+                padding: "6px 12px", borderRadius: "8px",
+                border: "1.5px solid #E5E5E5", backgroundColor: "white", cursor: "pointer",
+                whiteSpace: "nowrap",
+              }}>
                 {t.nav.logout}
               </button>
             </div>
           ) : (
-            <>
-              <Link
-                href="/login"
-                style={{
-                  color: "#1B4F72", fontWeight: 600, fontSize: "0.9rem",
-                  padding: "8px 18px", borderRadius: "9px",
-                  border: "1.5px solid #1B4F72",
-                }}
-                className="hover:bg-blue-50 transition-colors hidden sm:block whitespace-nowrap"
-              >
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <Link href="/login" style={{
+                color: "#1B4F72", fontWeight: 600, fontSize: "0.85rem",
+                padding: "7px 14px", borderRadius: "8px",
+                border: "1.5px solid #1B4F72", textDecoration: "none",
+                whiteSpace: "nowrap",
+              }}>
                 {t.nav.login}
               </Link>
-              <Link
-                href="/register"
-                style={{
-                  backgroundColor: "#FF6B35", color: "white",
-                  fontWeight: 600, fontSize: "0.9rem",
-                  padding: "9px 18px", borderRadius: "9px",
-                }}
-                className="hover:opacity-90 transition-opacity whitespace-nowrap"
-              >
+              <Link href="/register" style={{
+                backgroundColor: "#FF6B35", color: "white",
+                fontWeight: 600, fontSize: "0.85rem",
+                padding: "7px 14px", borderRadius: "8px",
+                textDecoration: "none", whiteSpace: "nowrap",
+              }}>
                 {t.nav.register}
               </Link>
-            </>
+            </div>
           )}
         </div>
       </div>
