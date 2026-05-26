@@ -9,7 +9,14 @@ import { servicesRouter } from "./routes/services";
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-app.use(cors({ origin: ["http://localhost:3002", "http://localhost:8081"] }));
+app.use(cors({
+  origin: [
+    "http://localhost:3002",
+    "http://localhost:8081",
+    "https://jari-app-epgm.vercel.app",
+    /\.vercel\.app$/,
+  ],
+}));
 app.use(express.json());
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
