@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CLIENT
+  PRESTATAIRE
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  firstName    String    @map("first_name")
+  lastName     String    @map("last_name")
+  phone        String?
+  role         Role      @default(CLIENT)
+  wilaya       Int?
+  avatarUrl    String?   @map("avatar_url")
+  isVerified   Boolean   @default(false) @map("is_verified")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  services     Service[]
+  bookingsAsClient    Booking[] @relation("ClientBookings")
+  bookingsAsProvider  Booking[] @relation("ProviderBookings")
+  reviewsGiven        Review[]  @relation("ReviewsGiven")
+  reviewsReceived     Review[]  @relation("ReviewsReceived")
+
+  @@map("users")
+}
+
+model Category {
+  id      String  @id @default(uuid())
+  slug    String  @unique
+  nameFr  String  @map("name_fr")
+  nameAr  String  @map("name_ar")
+  nameEn  String  @map("name_en")
+  icon    String
+
+  services Service[]
+
+  @@map("categories")
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  price       Decimal? @db.Decimal(10, 2)
+  wilaya      Int
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  providerId  String   @map("provider_id")
+  provider    User     @relation(fields: [providerId], references: [id])
+
+  categoryId  String   @map("category_id")
+  category    Category @relation(fields: [categoryId], references: [id])
+
+  bookings    Booking[]
+
+  @@map("services")
+}
+
+model Booking {
+  id          String        @id @default(uuid())
+  status      BookingStatus @default(PENDING)
+  scheduledAt DateTime?     @map("scheduled_at")
+  notes       String?
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  clientId    String  @map("client_id")
+  client      User    @relation("ClientBookings", fields: [clientId], references: [id])
+
+  providerId  String  @map("provider_id")
+  provider    User    @relation("ProviderBookings", fields: [providerId], references: [id])
+
+  serviceId   String  @map("service_id")
+  service     Service @relation(fields: [serviceId], references: [id])
+
+  review      Review?
+
+  @@map("bookings")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  bookingId  String  @unique @map("booking_id")
+  booking    Booking @relation(fields: [bookingId], references: [id])
+
+  authorId   String  @map("author_id")
+  author     User    @relation("ReviewsGiven", fields: [authorId], references: [id])
+
+  targetId   String  @map("target_id")
+  target     User    @relation("ReviewsReceived", fields: [targetId], references: [id])
+
+  @@map("reviews")
+}
