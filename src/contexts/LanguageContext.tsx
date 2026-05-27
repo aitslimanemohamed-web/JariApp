@@ -50,22 +50,30 @@ const translations = {
       },
     },
     hero: {
-      badge: "🇩🇿 Disponible en Algérie",
+      badge: "🇩🇿 Disponible dans toute l'Algérie",
       line1: "Trouvez des prestataires",
       highlight: "de confiance",
       line2: "près de chez vous",
       sub: "Plomberie, électricité, ménage, cours particuliers… Réservez un professionnel vérifié dans votre quartier en quelques minutes.",
       cta1: "Trouver un prestataire",
       cta2: "Comment ça marche",
+      loginHint: "Déjà inscrit ?",
+      loginLink: "Se connecter",
     },
     stats: {
       providers: "prestataires actifs",
       cities: "wilayas couvertes",
       rating: "note moyenne",
     },
+    trust: {
+      title: "Pourquoi choisir JariApp ?",
+      verified: { title: "Profils vérifiés", desc: "Chaque prestataire est contrôlé avant d'apparaître sur la plateforme." },
+      fast: { title: "Réponse rapide", desc: "Recevez des réponses de professionnels qualifiés en moins de 2h." },
+      free: { title: "Gratuit pour les clients", desc: "Aucun frais d'inscription ni commission cachée." },
+    },
     services: {
-      title: "Nos catégories de services",
-      sub: "Des centaines de prestataires qualifiés dans toute l'Algérie",
+      title: "Explorez nos catégories",
+      sub: "Des centaines de professionnels qualifiés dans toute l'Algérie",
       items: [
         "Plomberie", "Électricité", "Ménage", "Cours particuliers",
         "Peinture", "Climatisation", "Mécanique", "Déménagement",
@@ -73,24 +81,33 @@ const translations = {
     },
     how: {
       title: "Comment ça marche ?",
-      sub: "Réservez un service en 3 étapes simples",
+      sub: "Trouvez et réservez un service en 3 étapes simples",
       steps: [
         { title: "Décrivez votre besoin", desc: "Choisissez la catégorie et décrivez votre besoin en quelques mots." },
         { title: "Choisissez un prestataire", desc: "Parcourez les profils vérifiés près de vous avec avis et tarifs." },
-        { title: "Réservez & profitez", desc: "Confirmez la réservation, le prestataire se déplace chez vous à l'heure dite." },
+        { title: "Réservez & profitez", desc: "Confirmez la réservation, le prestataire se déplace chez vous." },
+      ],
+    },
+    testimonials: {
+      title: "Ils font confiance à JariApp",
+      items: [
+        { name: "Karim B.", city: "Alger", role: "Client", text: "J'ai trouvé un excellent plombier en 20 minutes. Rapide, propre et très professionnel !" },
+        { name: "Amina L.", city: "Oran", role: "Cliente", text: "Les prestataires sont sérieux et ponctuels. Je recommande JariApp à tous mes voisins." },
+        { name: "Mohamed A.", city: "Constantine", role: "Prestataire", text: "Depuis JariApp, j'ai triplé mon nombre de clients. Une plateforme vraiment excellente !" },
       ],
     },
     provider: {
       title: "Vous êtes prestataire ?",
-      sub: "Rejoignez notre réseau, trouvez de nouveaux clients près de chez vous. Inscription 100% gratuite.",
-      cta: "Devenir prestataire →",
+      sub: "Rejoignez notre réseau, développez votre clientèle et gérez vos réservations facilement. Inscription 100% gratuite.",
+      cta: "Rejoindre JariApp →",
     },
     footer: {
       tagline: "Services entre voisins en Algérie",
       links: ["Confidentialité", "CGU", "Contact"],
-      rights: "© 2024 JariApp. Tous droits réservés.",
+      rights: "© 2025 JariApp. Tous droits réservés.",
     },
   },
+
   ar: {
     nav: {
       services: "الخدمات",
@@ -137,21 +154,29 @@ const translations = {
       },
     },
     hero: {
-      badge: "🇩🇿 متوفر في الجزائر",
+      badge: "🇩🇿 متوفر في جميع أنحاء الجزائر",
       line1: "ابحث عن مزودي خدمات",
       highlight: "موثوقين",
       line2: "بالقرب منك",
-      sub: "سباكة، كهرباء، تنظيف، دروس خصوصية… احجز محترفًا موثقًا في حيّك خلال دقائق.",
+      sub: "سباكة، كهرباء، تنظيف، دروس خصوصية… احجز محترفًا موثقًا في حيّك في دقائق.",
       cta1: "ابحث عن مزود خدمة",
       cta2: "كيف يعمل",
+      loginHint: "لديك حساب؟",
+      loginLink: "تسجيل الدخول",
     },
     stats: {
       providers: "مزود خدمة نشط",
       cities: "ولاية مغطاة",
       rating: "متوسط التقييم",
     },
+    trust: {
+      title: "لماذا تختار JariApp؟",
+      verified: { title: "ملفات موثقة", desc: "كل مزود خدمة يخضع للمراجعة قبل النشر على المنصة." },
+      fast: { title: "رد سريع", desc: "احصل على رد من محترفين مؤهلين في أقل من ساعتين." },
+      free: { title: "مجاني للعملاء", desc: "لا رسوم تسجيل ولا عمولات مخفية." },
+    },
     services: {
-      title: "فئات خدماتنا",
+      title: "استكشف فئاتنا",
       sub: "مئات المحترفين المؤهلين في جميع أنحاء الجزائر",
       items: [
         "سباكة", "كهرباء", "تنظيف", "دروس خاصة",
@@ -160,24 +185,33 @@ const translations = {
     },
     how: {
       title: "كيف يعمل؟",
-      sub: "احجز خدمة في 3 خطوات بسيطة",
+      sub: "ابحث واحجز خدمة في 3 خطوات بسيطة",
       steps: [
         { title: "صف احتياجك", desc: "اختر الفئة وصف ما تحتاجه في بضع كلمات." },
-        { title: "اختر مزود الخدمة", desc: "تصفح الملفات الشخصية الموثقة بالقرب منك مع التقييمات والأسعار." },
+        { title: "اختر مزود الخدمة", desc: "تصفح الملفات الموثقة بالقرب منك مع التقييمات والأسعار." },
         { title: "احجز واستمتع", desc: "أكد الحجز وسيأتي مزود الخدمة إليك في الوقت المحدد." },
+      ],
+    },
+    testimonials: {
+      title: "يثقون في JariApp",
+      items: [
+        { name: "كريم ب.", city: "الجزائر", role: "عميل", text: "وجدت سباكًا ممتازًا في أقل من 20 دقيقة. سريع ونظيف ومحترف جداً!" },
+        { name: "أمينة ل.", city: "وهران", role: "عميلة", text: "مزودو الخدمة جادون وملتزمون بالمواعيد. أنصح به لجميع الجيران!" },
+        { name: "محمد أ.", city: "قسنطينة", role: "مزود خدمة", text: "منذ انضمامي إلى JariApp، تضاعف عدد عملائي ثلاث مرات. منصة رائعة!" },
       ],
     },
     provider: {
       title: "هل أنت مزود خدمة؟",
-      sub: "انضم إلى شبكتنا واعثر على عملاء جدد بالقرب منك. التسجيل مجاني 100%.",
-      cta: "← كن مزود خدمة",
+      sub: "انضم إلى شبكتنا، وسّع قاعدة عملائك وأدر حجوزاتك بسهولة. التسجيل مجاني 100%.",
+      cta: "← انضم إلى JariApp",
     },
     footer: {
       tagline: "خدمات بين الجيران في الجزائر",
       links: ["الخصوصية", "الشروط", "اتصل بنا"],
-      rights: "© 2024 JariApp. جميع الحقوق محفوظة.",
+      rights: "© 2025 JariApp. جميع الحقوق محفوظة.",
     },
   },
+
   en: {
     nav: {
       services: "Services",
@@ -224,22 +258,30 @@ const translations = {
       },
     },
     hero: {
-      badge: "🇩🇿 Available in Algeria",
+      badge: "🇩🇿 Available across Algeria",
       line1: "Find trusted",
       highlight: "service providers",
       line2: "near you",
       sub: "Plumbing, electricity, cleaning, tutoring… Book a verified professional in your neighborhood in minutes.",
       cta1: "Find a provider",
       cta2: "How it works",
+      loginHint: "Already have an account?",
+      loginLink: "Log in",
     },
     stats: {
       providers: "active providers",
       cities: "wilayas covered",
       rating: "average rating",
     },
+    trust: {
+      title: "Why choose JariApp?",
+      verified: { title: "Verified profiles", desc: "Every provider is reviewed before appearing on the platform." },
+      fast: { title: "Fast response", desc: "Get responses from qualified professionals in under 2 hours." },
+      free: { title: "Free for clients", desc: "No registration fees or hidden commissions." },
+    },
     services: {
-      title: "Our service categories",
-      sub: "Hundreds of qualified providers across Algeria",
+      title: "Explore our categories",
+      sub: "Hundreds of qualified professionals across Algeria",
       items: [
         "Plumbing", "Electricity", "Cleaning", "Tutoring",
         "Painting", "A/C & Heating", "Mechanics", "Moving",
@@ -247,22 +289,30 @@ const translations = {
     },
     how: {
       title: "How does it work?",
-      sub: "Book a service in 3 simple steps",
+      sub: "Find and book a service in 3 simple steps",
       steps: [
         { title: "Describe your need", desc: "Choose the category and describe what you need in a few words." },
         { title: "Choose a provider", desc: "Browse verified profiles near you with reviews and rates." },
-        { title: "Book & enjoy", desc: "Confirm the booking and the provider comes to you at the agreed time." },
+        { title: "Book & enjoy", desc: "Confirm the booking and the provider comes to you." },
+      ],
+    },
+    testimonials: {
+      title: "They trust JariApp",
+      items: [
+        { name: "Karim B.", city: "Algiers", role: "Client", text: "I found an excellent plumber in 20 minutes. Fast, clean and very professional!" },
+        { name: "Amina L.", city: "Oran", role: "Client", text: "The providers are serious and punctual. I recommend JariApp to all my neighbors." },
+        { name: "Mohamed A.", city: "Constantine", role: "Provider", text: "Since joining JariApp, I've tripled my number of clients. Truly excellent platform!" },
       ],
     },
     provider: {
       title: "Are you a provider?",
-      sub: "Join our network and find new clients near you. 100% free registration.",
-      cta: "Become a provider →",
+      sub: "Join our network, grow your client base and manage your bookings easily. 100% free registration.",
+      cta: "Join JariApp →",
     },
     footer: {
       tagline: "Neighbor services in Algeria",
       links: ["Privacy", "Terms", "Contact"],
-      rights: "© 2024 JariApp. All rights reserved.",
+      rights: "© 2025 JariApp. All rights reserved.",
     },
   },
 };
