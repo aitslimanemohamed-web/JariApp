@@ -22,33 +22,24 @@ const STATS = [
 ];
 
 const TRUST_ICONS = ["✓", "⚡", "🆓"];
-const TRUST_KEYS = ["verified", "fast", "free"] as const;
+const TRUST_KEYS  = ["verified", "fast", "free"] as const;
 const TRUST_COLORS = ["#10B981", "#F59E0B", "#6366F1"];
-
-const wrap: React.CSSProperties = {
-  maxWidth: "1100px", margin: "0 auto",
-  padding: "0 20px", width: "100%", boxSizing: "border-box",
-};
 
 export default function HomePage() {
   const { t, dir } = useLanguage();
   const { user } = useAuth();
 
   return (
-    <div dir={dir} style={{ width: "100%", minHeight: "100vh", backgroundColor: "#FAFAFA", fontFamily: "system-ui, -apple-system, sans-serif" }}>
+    <div dir={dir} style={{ width: "100%", minHeight: "100vh", backgroundColor: "#FAFAFA" }}>
       <Navbar />
 
-      {/* ═══════════════════════════════════════════
+      {/* ══════════════════════════════
           HERO
-      ═══════════════════════════════════════════ */}
-      <section style={{
-        background: "linear-gradient(150deg, #fff 0%, #FFF8F5 50%, #FFF3EE 100%)",
-        width: "100%", borderBottom: "1px solid #F0EBE8",
-      }}>
-        <div style={{ ...wrap, paddingTop: "80px", paddingBottom: "80px", textAlign: "center" }}>
+      ══════════════════════════════ */}
+      <section style={{ background: "linear-gradient(150deg, #fff 0%, #FFF8F5 50%, #FFF3EE 100%)", borderBottom: "1px solid #F0EBE8" }}>
+        <div className="jari-wrap jari-hero-inner">
 
-          {/* Badge */}
-          <div style={{ marginBottom: "24px" }}>
+          <div style={{ marginBottom: "22px" }}>
             <span style={{
               display: "inline-flex", alignItems: "center", gap: "6px",
               backgroundColor: "#FFF0EB", color: "#FF6B35",
@@ -60,64 +51,52 @@ export default function HomePage() {
             </span>
           </div>
 
-          {/* Title */}
           <h1 style={{
             color: "#0F172A", fontWeight: 900,
-            fontSize: "clamp(2rem, 5.5vw, 3.75rem)",
-            lineHeight: 1.1, margin: "0 auto 20px",
-            maxWidth: "780px", letterSpacing: "-1px",
+            fontSize: "clamp(1.85rem, 5vw, 3.75rem)",
+            lineHeight: 1.1, margin: "0 auto 18px",
+            maxWidth: "760px", letterSpacing: "-1px",
           }}>
             {t.hero.line1}{" "}
             <span style={{
-              color: "#FF6B35",
               backgroundImage: "linear-gradient(135deg, #FF6B35, #FF8C5A)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
             }}>
               {t.hero.highlight}
             </span>{" "}
             {t.hero.line2}
           </h1>
 
-          {/* Subtitle */}
           <p style={{
-            color: "#64748B", fontSize: "clamp(0.95rem, 2vw, 1.1rem)",
-            lineHeight: 1.8, maxWidth: "540px", margin: "0 auto 36px",
+            color: "#64748B", fontSize: "clamp(0.9rem, 2vw, 1.05rem)",
+            lineHeight: 1.8, maxWidth: "520px", margin: "0 auto 32px",
           }}>
             {t.hero.sub}
           </p>
 
-          {/* CTAs */}
-          <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap", marginBottom: "20px" }}>
+          <div className="jari-hero-ctas">
             <Link href={user ? "#services" : "/register"} style={{
-              display: "inline-flex", alignItems: "center", gap: "8px",
+              display: "inline-flex", alignItems: "center", justifyContent: "center",
               background: "linear-gradient(135deg, #FF6B35, #FF5520)",
               color: "white", fontWeight: 700, fontSize: "1rem",
               padding: "14px 32px", borderRadius: "14px",
               boxShadow: "0 4px 20px rgba(255,107,53,0.4)",
-              textDecoration: "none", transition: "transform 0.15s",
-            }}
-              onMouseEnter={e => (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"}
-              onMouseLeave={e => (e.currentTarget as HTMLElement).style.transform = "none"}
-            >
+              textDecoration: "none",
+            }}>
               {t.hero.cta1}
             </Link>
             <Link href="#comment-ca-marche" style={{
-              display: "inline-flex", alignItems: "center", gap: "8px",
+              display: "inline-flex", alignItems: "center", justifyContent: "center",
               backgroundColor: "white", color: "#1B4F72", fontWeight: 600, fontSize: "1rem",
               padding: "14px 28px", borderRadius: "14px",
               border: "2px solid #E2E8F0",
               boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-              textDecoration: "none", transition: "border-color 0.15s",
-            }}
-              onMouseEnter={e => (e.currentTarget as HTMLElement).style.borderColor = "#1B4F72"}
-              onMouseLeave={e => (e.currentTarget as HTMLElement).style.borderColor = "#E2E8F0"}
-            >
+              textDecoration: "none",
+            }}>
               {t.hero.cta2}
             </Link>
           </div>
 
-          {/* Login hint */}
           {!user && (
             <p style={{ color: "#94A3B8", fontSize: "0.875rem" }}>
               {t.hero.loginHint}{" "}
@@ -128,24 +107,14 @@ export default function HomePage() {
           )}
 
           {/* Stats */}
-          <div style={{
-            marginTop: "56px",
-            display: "inline-flex", flexWrap: "wrap", justifyContent: "center",
-            backgroundColor: "white", borderRadius: "20px",
-            border: "1px solid #F0EDE8",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
-            overflow: "hidden",
-          }}>
-            {STATS.map((stat, i) => (
-              <div key={stat.key} style={{
-                textAlign: "center", padding: "20px 40px",
-                borderRight: i < STATS.length - 1 ? "1px solid #F0EDE8" : "none",
-              }}>
-                <div style={{ fontSize: "1.3rem", marginBottom: "4px" }}>{stat.icon}</div>
-                <div style={{ color: "#0F172A", fontWeight: 800, fontSize: "1.6rem", lineHeight: 1, letterSpacing: "-0.5px" }}>
+          <div className="jari-stats">
+            {STATS.map((stat) => (
+              <div key={stat.key} className="jari-stat-item">
+                <div style={{ fontSize: "1.2rem", marginBottom: "4px" }}>{stat.icon}</div>
+                <div style={{ color: "#0F172A", fontWeight: 800, fontSize: "1.5rem", lineHeight: 1, letterSpacing: "-0.5px" }}>
                   {stat.value}
                 </div>
-                <div style={{ color: "#94A3B8", fontSize: "0.75rem", marginTop: "5px", fontWeight: 500, whiteSpace: "nowrap" }}>
+                <div style={{ color: "#94A3B8", fontSize: "0.72rem", marginTop: "4px", fontWeight: 500 }}>
                   {t.stats[stat.key]}
                 </div>
               </div>
@@ -154,37 +123,37 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
+      {/* ══════════════════════════════
           WHY US
-      ═══════════════════════════════════════════ */}
-      <section style={{ backgroundColor: "white", width: "100%", borderBottom: "1px solid #F0F0F0" }}>
-        <div style={{ ...wrap, paddingTop: "72px", paddingBottom: "72px" }}>
+      ══════════════════════════════ */}
+      <section style={{ backgroundColor: "white", borderBottom: "1px solid #F0F0F0" }}>
+        <div className="jari-wrap jari-section-py">
           <h2 style={{
             textAlign: "center", color: "#0F172A", fontWeight: 800,
-            fontSize: "clamp(1.4rem, 3vw, 2rem)", marginBottom: "40px", letterSpacing: "-0.5px",
+            fontSize: "clamp(1.3rem, 3vw, 1.9rem)", marginBottom: "36px", letterSpacing: "-0.5px",
           }}>
             {t.trust.title}
           </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "20px" }}>
+          <div className="jari-grid-3">
             {TRUST_KEYS.map((key, i) => (
               <div key={key} style={{
                 backgroundColor: "#FAFAFA", borderRadius: "16px",
-                padding: "28px 24px", border: "1px solid #F0F0F0",
-                display: "flex", alignItems: "flex-start", gap: "16px",
+                padding: "24px 20px", border: "1px solid #F0F0F0",
+                display: "flex", alignItems: "flex-start", gap: "14px",
               }}>
                 <div style={{
-                  width: "44px", height: "44px", borderRadius: "12px", flexShrink: 0,
+                  width: "42px", height: "42px", borderRadius: "12px", flexShrink: 0,
                   backgroundColor: `${TRUST_COLORS[i]}18`,
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: "1.2rem", color: TRUST_COLORS[i], fontWeight: 700,
+                  fontSize: "1.1rem", color: TRUST_COLORS[i], fontWeight: 700,
                 }}>
                   {TRUST_ICONS[i]}
                 </div>
                 <div>
-                  <div style={{ color: "#0F172A", fontWeight: 700, fontSize: "0.95rem", marginBottom: "6px" }}>
+                  <div style={{ color: "#0F172A", fontWeight: 700, fontSize: "0.92rem", marginBottom: "5px" }}>
                     {t.trust[key].title}
                   </div>
-                  <div style={{ color: "#64748B", fontSize: "0.875rem", lineHeight: 1.6 }}>
+                  <div style={{ color: "#64748B", fontSize: "0.84rem", lineHeight: 1.6 }}>
                     {t.trust[key].desc}
                   </div>
                 </div>
@@ -194,30 +163,29 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
+      {/* ══════════════════════════════
           SERVICES
-      ═══════════════════════════════════════════ */}
-      <section id="services" style={{ backgroundColor: "#F8FAFC", width: "100%" }}>
-        <div style={{ ...wrap, paddingTop: "72px", paddingBottom: "72px" }}>
-          <div style={{ textAlign: "center", marginBottom: "44px" }}>
-            <h2 style={{ color: "#0F172A", fontWeight: 800, fontSize: "clamp(1.4rem, 3vw, 2rem)", marginBottom: "8px", letterSpacing: "-0.5px" }}>
+      ══════════════════════════════ */}
+      <section id="services" style={{ backgroundColor: "#F8FAFC" }}>
+        <div className="jari-wrap jari-section-py">
+          <div style={{ textAlign: "center", marginBottom: "36px" }}>
+            <h2 style={{ color: "#0F172A", fontWeight: 800, fontSize: "clamp(1.3rem, 3vw, 1.9rem)", marginBottom: "8px", letterSpacing: "-0.5px" }}>
               {t.services.title}
             </h2>
-            <p style={{ color: "#64748B", fontSize: "0.95rem" }}>{t.services.sub}</p>
+            <p style={{ color: "#64748B", fontSize: "0.92rem" }}>{t.services.sub}</p>
           </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))", gap: "14px" }}>
+          <div className="jari-grid-services">
             {SERVICES.map((svc, i) => (
               <div key={i} style={{
                 backgroundColor: "white", borderRadius: "16px",
-                padding: "28px 12px 22px", textAlign: "center",
+                padding: "24px 10px 20px", textAlign: "center",
                 border: "1px solid #EEF0F4", cursor: "pointer",
                 transition: "all 0.2s", position: "relative", overflow: "hidden",
               }}
                 onMouseEnter={e => {
                   const el = e.currentTarget as HTMLElement;
-                  el.style.transform = "translateY(-4px)";
-                  el.style.boxShadow = `0 12px 32px ${svc.color}22`;
+                  el.style.transform = "translateY(-3px)";
+                  el.style.boxShadow = `0 10px 28px ${svc.color}22`;
                   el.style.borderColor = `${svc.color}44`;
                 }}
                 onMouseLeave={e => {
@@ -227,19 +195,16 @@ export default function HomePage() {
                   el.style.borderColor = "#EEF0F4";
                 }}
               >
+                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", backgroundColor: svc.color }} />
                 <div style={{
-                  position: "absolute", top: 0, left: 0, right: 0, height: "3px",
-                  backgroundColor: svc.color,
-                }} />
-                <div style={{
-                  width: "52px", height: "52px", borderRadius: "14px", margin: "0 auto 12px",
+                  width: "48px", height: "48px", borderRadius: "14px", margin: "0 auto 10px",
                   backgroundColor: `${svc.color}15`,
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: "1.7rem",
+                  fontSize: "1.6rem",
                 }}>
                   {svc.icon}
                 </div>
-                <div style={{ color: "#1E293B", fontWeight: 600, fontSize: "0.85rem", lineHeight: 1.3 }}>
+                <div style={{ color: "#1E293B", fontWeight: 600, fontSize: "0.82rem", lineHeight: 1.3 }}>
                   {t.services.items[i]}
                 </div>
               </div>
@@ -248,46 +213,45 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
+      {/* ══════════════════════════════
           HOW IT WORKS
-      ═══════════════════════════════════════════ */}
-      <section id="comment-ca-marche" style={{ backgroundColor: "white", width: "100%" }}>
-        <div style={{ ...wrap, paddingTop: "72px", paddingBottom: "72px" }}>
-          <div style={{ textAlign: "center", marginBottom: "52px" }}>
-            <h2 style={{ color: "#0F172A", fontWeight: 800, fontSize: "clamp(1.4rem, 3vw, 2rem)", marginBottom: "8px", letterSpacing: "-0.5px" }}>
+      ══════════════════════════════ */}
+      <section id="comment-ca-marche" style={{ backgroundColor: "white" }}>
+        <div className="jari-wrap jari-section-py">
+          <div style={{ textAlign: "center", marginBottom: "44px" }}>
+            <h2 style={{ color: "#0F172A", fontWeight: 800, fontSize: "clamp(1.3rem, 3vw, 1.9rem)", marginBottom: "8px", letterSpacing: "-0.5px" }}>
               {t.how.title}
             </h2>
-            <p style={{ color: "#64748B", fontSize: "0.95rem" }}>{t.how.sub}</p>
+            <p style={{ color: "#64748B", fontSize: "0.92rem" }}>{t.how.sub}</p>
           </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "24px" }}>
+          <div className="jari-grid-3">
             {t.how.steps.map((step, i) => (
               <div key={i} style={{
-                textAlign: "center", padding: "36px 28px 32px",
+                textAlign: "center", padding: "32px 24px 28px",
                 backgroundColor: "#F8FAFC", borderRadius: "20px",
-                border: "1px solid #EEF0F4", position: "relative",
+                border: "1px solid #EEF0F4",
               }}>
                 <div style={{
-                  width: "56px", height: "56px", borderRadius: "18px", margin: "0 auto 20px",
+                  width: "52px", height: "52px", borderRadius: "16px", margin: "0 auto 18px",
                   background: i === 0
                     ? "linear-gradient(135deg, #FF6B35, #FF8C5A)"
                     : i === 1
                       ? "linear-gradient(135deg, #1B4F72, #2E6CA0)"
                       : "linear-gradient(135deg, #10B981, #34D399)",
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  color: "white", fontWeight: 900, fontSize: "1.4rem",
+                  color: "white", fontWeight: 900, fontSize: "1.3rem",
                   boxShadow: i === 0
-                    ? "0 6px 16px rgba(255,107,53,0.35)"
+                    ? "0 5px 14px rgba(255,107,53,0.35)"
                     : i === 1
-                      ? "0 6px 16px rgba(27,79,114,0.3)"
-                      : "0 6px 16px rgba(16,185,129,0.3)",
+                      ? "0 5px 14px rgba(27,79,114,0.3)"
+                      : "0 5px 14px rgba(16,185,129,0.3)",
                 }}>
                   {i + 1}
                 </div>
-                <h3 style={{ color: "#0F172A", fontWeight: 700, fontSize: "1rem", marginBottom: "10px" }}>
+                <h3 style={{ color: "#0F172A", fontWeight: 700, fontSize: "0.95rem", marginBottom: "8px" }}>
                   {step.title}
                 </h3>
-                <p style={{ color: "#64748B", lineHeight: 1.7, fontSize: "0.875rem" }}>
+                <p style={{ color: "#64748B", lineHeight: 1.7, fontSize: "0.84rem" }}>
                   {step.desc}
                 </p>
               </div>
@@ -296,49 +260,44 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
+      {/* ══════════════════════════════
           TESTIMONIALS
-      ═══════════════════════════════════════════ */}
-      <section style={{ backgroundColor: "#F8FAFC", width: "100%", borderTop: "1px solid #F0F0F0" }}>
-        <div style={{ ...wrap, paddingTop: "72px", paddingBottom: "72px" }}>
+      ══════════════════════════════ */}
+      <section style={{ backgroundColor: "#F8FAFC", borderTop: "1px solid #F0F0F0" }}>
+        <div className="jari-wrap jari-section-py">
           <h2 style={{
             textAlign: "center", color: "#0F172A", fontWeight: 800,
-            fontSize: "clamp(1.4rem, 3vw, 2rem)", marginBottom: "44px", letterSpacing: "-0.5px",
+            fontSize: "clamp(1.3rem, 3vw, 1.9rem)", marginBottom: "36px", letterSpacing: "-0.5px",
           }}>
             {t.testimonials.title}
           </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "20px" }}>
+          <div className="jari-grid-testimonials">
             {t.testimonials.items.map((item, i) => (
               <div key={i} style={{
                 backgroundColor: "white", borderRadius: "18px",
-                padding: "28px 24px", border: "1px solid #EEF0F4",
+                padding: "24px 22px", border: "1px solid #EEF0F4",
                 boxShadow: "0 2px 16px rgba(0,0,0,0.04)",
               }}>
-                {/* Stars */}
-                <div style={{ color: "#F59E0B", fontSize: "0.9rem", marginBottom: "14px", letterSpacing: "2px" }}>
-                  ★★★★★
-                </div>
-                {/* Quote */}
-                <p style={{ color: "#334155", lineHeight: 1.7, fontSize: "0.9rem", marginBottom: "20px", fontStyle: "italic" }}>
+                <div style={{ color: "#F59E0B", fontSize: "0.85rem", marginBottom: "12px", letterSpacing: "2px" }}>★★★★★</div>
+                <p style={{ color: "#334155", lineHeight: 1.7, fontSize: "0.875rem", marginBottom: "18px", fontStyle: "italic" }}>
                   "{item.text}"
                 </p>
-                {/* Author */}
-                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                   <div style={{
-                    width: "40px", height: "40px", borderRadius: "50%", flexShrink: 0,
+                    width: "38px", height: "38px", borderRadius: "50%", flexShrink: 0,
                     background: i === 0
                       ? "linear-gradient(135deg, #FF6B35, #FF8C5A)"
                       : i === 1
                         ? "linear-gradient(135deg, #6366F1, #818CF8)"
                         : "linear-gradient(135deg, #10B981, #34D399)",
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    color: "white", fontWeight: 700, fontSize: "1rem",
+                    color: "white", fontWeight: 700, fontSize: "0.95rem",
                   }}>
                     {item.name.charAt(0)}
                   </div>
                   <div>
-                    <div style={{ color: "#0F172A", fontWeight: 700, fontSize: "0.88rem" }}>{item.name}</div>
-                    <div style={{ color: "#94A3B8", fontSize: "0.78rem" }}>{item.role} · {item.city}</div>
+                    <div style={{ color: "#0F172A", fontWeight: 700, fontSize: "0.85rem" }}>{item.name}</div>
+                    <div style={{ color: "#94A3B8", fontSize: "0.75rem" }}>{item.role} · {item.city}</div>
                   </div>
                 </div>
               </div>
@@ -347,36 +306,34 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
+      {/* ══════════════════════════════
           PROVIDER CTA
-      ═══════════════════════════════════════════ */}
+      ══════════════════════════════ */}
       <section id="prestataires" style={{
-        background: "linear-gradient(135deg, #1A3C5E 0%, #1B4F72 50%, #1E5F8A 100%)",
-        width: "100%", position: "relative", overflow: "hidden",
+        background: "linear-gradient(135deg, #1A3C5E 0%, #1B4F72 60%, #1E5F8A 100%)",
+        position: "relative", overflow: "hidden",
       }}>
-        {/* Decorative circles */}
-        <div style={{ position: "absolute", top: "-80px", right: "-80px", width: "300px", height: "300px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.04)" }} />
-        <div style={{ position: "absolute", bottom: "-60px", left: "-60px", width: "220px", height: "220px", borderRadius: "50%", backgroundColor: "rgba(255,107,53,0.08)" }} />
-        <div style={{ position: "absolute", top: "50%", left: "15%", width: "100px", height: "100px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.03)", transform: "translateY(-50%)" }} />
-
-        <div style={{ ...wrap, maxWidth: "700px", paddingTop: "80px", paddingBottom: "80px", textAlign: "center", position: "relative", zIndex: 1 }}>
+        <div style={{ position: "absolute", top: "-80px", right: "-80px", width: "280px", height: "280px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.04)" }} />
+        <div style={{ position: "absolute", bottom: "-60px", left: "-60px", width: "200px", height: "200px", borderRadius: "50%", backgroundColor: "rgba(255,107,53,0.07)" }} />
+        <div className="jari-wrap jari-section-py" style={{ maxWidth: "680px", textAlign: "center", position: "relative", zIndex: 1 }}>
           <div style={{
             display: "inline-block", backgroundColor: "rgba(255,107,53,0.2)",
-            color: "#FF8C5A", fontWeight: 600, fontSize: "0.8rem",
-            padding: "5px 14px", borderRadius: "100px", marginBottom: "20px",
-            border: "1px solid rgba(255,107,53,0.3)",
+            color: "#FF9A72", fontWeight: 600, fontSize: "0.78rem",
+            padding: "5px 14px", borderRadius: "100px", marginBottom: "18px",
+            border: "1px solid rgba(255,107,53,0.25)",
           }}>
-            💼 Rejoignez notre réseau
+            💼 {t.nav.becomeProvider}
           </div>
           <h2 style={{
             color: "white", fontWeight: 900,
-            fontSize: "clamp(1.5rem, 3.5vw, 2.5rem)", marginBottom: "16px", lineHeight: 1.2,
-            letterSpacing: "-0.5px",
+            fontSize: "clamp(1.4rem, 3.5vw, 2.4rem)", marginBottom: "14px",
+            lineHeight: 1.2, letterSpacing: "-0.5px",
           }}>
             {t.provider.title}
           </h2>
           <p style={{
-            color: "rgba(255,255,255,0.7)", fontSize: "1rem", lineHeight: 1.8, marginBottom: "36px", maxWidth: "500px", margin: "0 auto 36px",
+            color: "rgba(255,255,255,0.7)", fontSize: "clamp(0.9rem, 2vw, 1rem)",
+            lineHeight: 1.8, marginBottom: "32px",
           }}>
             {t.provider.sub}
           </p>
@@ -384,53 +341,40 @@ export default function HomePage() {
             display: "inline-block",
             background: "linear-gradient(135deg, #FF6B35, #FF5520)",
             color: "white", fontWeight: 700, fontSize: "1rem",
-            padding: "15px 40px", borderRadius: "14px",
+            padding: "14px 36px", borderRadius: "14px",
             boxShadow: "0 6px 24px rgba(255,107,53,0.5)",
-            textDecoration: "none", transition: "transform 0.15s",
-          }}
-            onMouseEnter={e => (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"}
-            onMouseLeave={e => (e.currentTarget as HTMLElement).style.transform = "none"}
-          >
+            textDecoration: "none",
+          }}>
             {t.provider.cta}
           </Link>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
+      {/* ══════════════════════════════
           FOOTER
-      ═══════════════════════════════════════════ */}
-      <footer style={{ backgroundColor: "#0B1120", width: "100%" }}>
-        <div style={{ ...wrap, paddingTop: "40px", paddingBottom: "40px" }}>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "20px" }}>
-
+      ══════════════════════════════ */}
+      <footer style={{ backgroundColor: "#0B1120" }}>
+        <div className="jari-wrap">
+          <div className="jari-footer-inner">
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: "1px", marginBottom: "6px" }}>
                 <span style={{
                   background: "linear-gradient(135deg, #FF6B35, #FF8C5A)",
-                  color: "white", fontWeight: 900, fontSize: "1.1rem",
+                  color: "white", fontWeight: 900, fontSize: "1.05rem",
                   padding: "2px 9px", borderRadius: "7px",
                 }}>jari</span>
-                <span style={{ color: "white", fontWeight: 800, fontSize: "1.1rem" }}>app</span>
+                <span style={{ color: "white", fontWeight: 800, fontSize: "1.05rem" }}>app</span>
               </div>
-              <div style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.78rem" }}>
-                {t.footer.tagline}
-              </div>
+              <div style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.76rem" }}>{t.footer.tagline}</div>
             </div>
-
-            <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
               {t.footer.links.map((link) => (
-                <Link key={link} href="#" style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.82rem", fontWeight: 500, textDecoration: "none", transition: "color 0.15s" }}
-                  onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.8)"}
-                  onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.4)"}
-                >
+                <Link key={link} href="#" style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.8rem", fontWeight: 500 }}>
                   {link}
                 </Link>
               ))}
             </div>
-
-            <div style={{ color: "rgba(255,255,255,0.25)", fontSize: "0.78rem" }}>
-              {t.footer.rights}
-            </div>
+            <div style={{ color: "rgba(255,255,255,0.25)", fontSize: "0.76rem" }}>{t.footer.rights}</div>
           </div>
         </div>
       </footer>

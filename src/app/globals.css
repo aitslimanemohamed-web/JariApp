@@ -6,8 +6,6 @@
   --color-secondary: #1B4F72;
   --color-background: #FAFAFA;
   --color-text: #1A1A2E;
-  --color-success: #27AE60;
-  --color-error: #E74C3C;
 }
 
 * {
@@ -16,8 +14,7 @@
   margin: 0;
 }
 
-html,
-body {
+html, body {
   width: 100%;
   overflow-x: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Geeza Pro', sans-serif;
@@ -25,12 +22,122 @@ body {
   color: var(--color-text);
 }
 
-section {
-  display: block;
+section { display: block; width: 100%; }
+a { color: inherit; text-decoration: none; }
+
+/* ─── Responsive wrap ─── */
+.jari-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
   width: 100%;
+  box-sizing: border-box;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* ─── Section padding ─── */
+.jari-section-py { padding-top: 72px; padding-bottom: 72px; }
+
+/* ─── Navbar ─── */
+.jari-nav-links { display: flex; align-items: center; gap: 28px; flex: 1; justify-content: center; }
+.jari-nav-login { display: flex; }
+
+/* ─── Hero ─── */
+.jari-hero-inner { padding-top: 80px; padding-bottom: 80px; text-align: center; }
+.jari-hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+
+/* ─── Stats bar ─── */
+.jari-stats {
+  margin-top: 52px;
+  display: inline-flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  background-color: white;
+  border-radius: 20px;
+  border: 1px solid #F0EDE8;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+.jari-stat-item {
+  text-align: center;
+  padding: 20px 36px;
+}
+.jari-stat-item + .jari-stat-item {
+  border-left: 1px solid #F0EDE8;
+}
+
+/* ─── Grids ─── */
+.jari-grid-services {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 14px;
+}
+.jari-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+.jari-grid-testimonials {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* ─── Footer ─── */
+.jari-footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+/* ════════════════════════════════════════
+   MOBILE  (≤ 640px)
+════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .jari-nav-links { display: none; }
+  .jari-nav-login { display: flex; gap: 6px !important; }
+  .jari-nav-login a { font-size: 0.78rem !important; padding: 7px 10px !important; }
+
+  .jari-hero-inner { padding-top: 48px; padding-bottom: 52px; }
+  .jari-hero-ctas { flex-direction: column; align-items: center; }
+  .jari-hero-ctas a { width: 100%; max-width: 320px; text-align: center; }
+
+  .jari-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    border-radius: 16px;
+  }
+  .jari-stat-item {
+    padding: 16px 8px;
+    border-left: none !important;
+  }
+  .jari-stat-item + .jari-stat-item {
+    border-left: 1px solid #F0EDE8 !important;
+  }
+
+  .jari-grid-services { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .jari-grid-3 { grid-template-columns: 1fr; }
+  .jari-grid-testimonials { grid-template-columns: 1fr; }
+
+  .jari-section-py { padding-top: 48px; padding-bottom: 48px; }
+
+  .jari-footer-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
+}
+
+/* ════════════════════════════════════════
+   TABLET  (641px – 1024px)
+════════════════════════════════════════ */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .jari-nav-links { display: none; }
+
+  .jari-grid-services { grid-template-columns: repeat(4, 1fr); }
+  .jari-grid-3 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .jari-grid-testimonials { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+  .jari-stat-item { padding: 18px 24px; }
+  .jari-section-py { padding-top: 56px; padding-bottom: 56px; }
 }
