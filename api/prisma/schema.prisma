@@ -34,13 +34,32 @@ model User {
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime  @updatedAt @map("updated_at")
 
-  services     Service[]
-  bookingsAsClient    Booking[] @relation("ClientBookings")
-  bookingsAsProvider  Booking[] @relation("ProviderBookings")
-  reviewsGiven        Review[]  @relation("ReviewsGiven")
-  reviewsReceived     Review[]  @relation("ReviewsReceived")
+  providerProfile     ProviderProfile?
+  services            Service[]
+  bookingsAsClient    Booking[]  @relation("ClientBookings")
+  bookingsAsProvider  Booking[]  @relation("ProviderBookings")
+  reviewsGiven        Review[]   @relation("ReviewsGiven")
+  reviewsReceived     Review[]   @relation("ReviewsReceived")
 
   @@map("users")
+}
+
+model ProviderProfile {
+  id              String   @id @default(uuid())
+  userId          String   @unique @map("user_id")
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bio             String?
+  experienceYears Int?     @map("experience_years")
+  isAvailable     Boolean  @default(true) @map("is_available")
+  averageRating   Float    @default(0) @map("average_rating")
+  totalReviews    Int      @default(0) @map("total_reviews")
+  onboardingDone  Boolean  @default(false) @map("onboarding_done")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  categories ProviderCategory[]
+
+  @@map("provider_profiles")
 }
 
 model Category {
@@ -51,9 +70,21 @@ model Category {
   nameEn  String  @map("name_en")
   icon    String
 
-  services Service[]
+  services   Service[]
+  providers  ProviderCategory[]
 
   @@map("categories")
+}
+
+model ProviderCategory {
+  id         String          @id @default(uuid())
+  providerId String          @map("provider_id")
+  provider   ProviderProfile @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  categoryId String          @map("category_id")
+  category   Category        @relation(fields: [categoryId], references: [id])
+
+  @@unique([providerId, categoryId])
+  @@map("provider_categories")
 }
 
 model Service {

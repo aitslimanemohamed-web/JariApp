@@ -22,6 +22,16 @@ export type User = {
   role: "CLIENT" | "PRESTATAIRE";
   wilaya?: number;
   avatarUrl?: string;
+  providerProfile?: { onboardingDone: boolean } | null;
+};
+
+export type Category = {
+  id: string;
+  slug: string;
+  nameFr: string;
+  nameAr: string;
+  nameEn: string;
+  icon: string;
 };
 
 export type AuthResponse = { user: User; token: string };
@@ -29,13 +39,9 @@ export type AuthResponse = { user: User; token: string };
 export const api = {
   auth: {
     register: (body: {
-      username: string;
-      password: string;
-      firstName: string;
-      lastName: string;
-      phone?: string;
-      role: "CLIENT" | "PRESTATAIRE";
-      wilaya?: number;
+      username: string; password: string;
+      firstName: string; lastName: string;
+      phone?: string; role: "CLIENT" | "PRESTATAIRE"; wilaya?: number;
     }) => request<AuthResponse>("/api/v1/auth/register", { method: "POST", body: JSON.stringify(body) }),
 
     login: (body: { username: string; password: string }) =>
@@ -43,5 +49,28 @@ export const api = {
 
     me: (token: string) =>
       request<User>("/api/v1/auth/me", { headers: authHeader(token) }),
+  },
+
+  categories: {
+    list: () => request<Category[]>("/api/v1/categories"),
+  },
+
+  providers: {
+    saveCategories: (categoryIds: string[], token: string) =>
+      request<{ ok: boolean }>("/api/v1/providers/onboarding/categories", {
+        method: "POST",
+        headers: authHeader(token),
+        body: JSON.stringify({ categoryIds }),
+      }),
+
+    saveProfile: (data: { bio: string; experienceYears: number; phone?: string }, token: string) =>
+      request<{ ok: boolean; onboardingDone: boolean }>("/api/v1/providers/onboarding/profile", {
+        method: "POST",
+        headers: authHeader(token),
+        body: JSON.stringify(data),
+      }),
+
+    getMe: (token: string) =>
+      request<User>("/api/v1/providers/me", { headers: authHeader(token) }),
   },
 };

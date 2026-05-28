@@ -62,7 +62,7 @@ export default function RegisterPage() {
         wilaya: form.wilaya ? Number(form.wilaya) : undefined,
       });
       await login(form.username, form.password);
-      router.push("/");
+      router.push(form.role === "PRESTATAIRE" ? "/onboarding" : "/");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Erreur lors de l'inscription");
     } finally {

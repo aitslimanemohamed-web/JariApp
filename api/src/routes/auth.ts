@@ -76,7 +76,13 @@ authRouter.get("/me", async (req, res) => {
   if (!header?.startsWith("Bearer ")) { res.status(401).json({ error: "Non autorisé" }); return; }
   try {
     const { userId } = jwt.verify(header.slice(7), process.env.JWT_SECRET!) as { userId: string };
-    const user = await prisma.user.findUnique({ where: { id: userId }, select: userSelect });
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        ...userSelect,
+        providerProfile: { select: { onboardingDone: true } },
+      },
+    });
     if (!user) { res.status(404).json({ error: "Utilisateur introuvable" }); return; }
     res.json(user);
   } catch {

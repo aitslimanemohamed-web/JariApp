@@ -2,8 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 export interface AuthRequest extends Request {
-  userId?: string;
-  userRole?: string;
+  user?: { id: string; role: "CLIENT" | "PRESTATAIRE" };
 }
 
 export function requireAuth(req: AuthRequest, res: Response, next: NextFunction) {
@@ -12,11 +11,9 @@ export function requireAuth(req: AuthRequest, res: Response, next: NextFunction)
     res.status(401).json({ error: "Token manquant" });
     return;
   }
-  const token = header.slice(7);
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string; role: string };
-    req.userId = payload.userId;
-    req.userRole = payload.role;
+    const payload = jwt.verify(header.slice(7), process.env.JWT_SECRET!) as { userId: string; role: "CLIENT" | "PRESTATAIRE" };
+    req.user = { id: payload.userId, role: payload.role };
     next();
   } catch {
     res.status(401).json({ error: "Token invalide" });
