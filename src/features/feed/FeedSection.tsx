@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import FeedCard, { type Annonce, type AnnonceType } from "./FeedCard";
+import FeedCard, { type Annonce, type AnnonceType } from "./FeedCard"; // AnnonceType utilisé dans GROUP_TYPES
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const MOCK_FEED: Annonce[] = [
@@ -26,22 +26,33 @@ const MOCK_FEED: Annonce[] = [
   { id: 20, type: "location", category: "Électroménager", categoryIcon: "🧹", title: "Aspirateur industriel à louer", description: "Idéal fin de chantier, nettoyage après travaux. Livraison possible.", author: "Samir B.", authorInitial: "S", wilaya: "Constantine", price: "800 DA/j", time: "Il y a 2j" },
 ];
 
-const FILTER_KEYS: (AnnonceType | "all")[] = ["all", "service", "emploi", "location", "vente", "demande"];
+type GroupKey = "all" | "marche" | "services" | "emploi";
+
+const GROUP_TYPES: Record<GroupKey, AnnonceType[]> = {
+  all:      ["service", "vente", "demande", "emploi", "location"],
+  marche:   ["vente", "location"],
+  services: ["service", "demande"],
+  emploi:   ["emploi"],
+};
+
+const GROUP_ICONS: Record<GroupKey, string> = {
+  all: "✦", marche: "🏷️", services: "🔧", emploi: "💼",
+};
 
 export default function FeedSection() {
-  const [active, setActive] = useState<AnnonceType | "all">("all");
+  const [active, setActive] = useState<GroupKey>("all");
   const { t } = useLanguage();
 
-  const filtered = active === "all" ? MOCK_FEED : MOCK_FEED.filter(a => a.type === active);
+  const filtered = MOCK_FEED.filter(a => GROUP_TYPES[active].includes(a.type));
 
   return (
     <div>
-      {/* filtres */}
+      {/* filtres groupés */}
       <div style={{ display: "flex", gap: "8px", marginBottom: "20px", flexWrap: "wrap" }}>
-        {FILTER_KEYS.map(key => {
+        {(Object.keys(GROUP_TYPES) as GroupKey[]).map(key => {
           const isActive = active === key;
-          const label = key === "all" ? t.feed.filters.all : t.feed.filters[key];
-          const count = key === "all" ? MOCK_FEED.length : MOCK_FEED.filter(a => a.type === key).length;
+          const label = t.feed.filters[key];
+          const count = MOCK_FEED.filter(a => GROUP_TYPES[key].includes(a.type)).length;
           return (
             <button key={key} onClick={() => setActive(key)} style={{
               padding: "8px 18px", borderRadius: "100px", cursor: "pointer",
@@ -52,11 +63,11 @@ export default function FeedSection() {
               fontSize: "0.85rem",
               boxShadow: isActive ? "0 3px 10px rgba(255,107,53,0.3)" : "none",
               transition: "all 0.15s",
+              display: "flex", alignItems: "center", gap: "5px",
             }}>
+              <span style={{ fontSize: "0.8rem" }}>{GROUP_ICONS[key]}</span>
               {label}
-              <span style={{ marginLeft: "6px", fontSize: "0.72rem", opacity: 0.75 }}>
-                ({count})
-              </span>
+              <span style={{ fontSize: "0.72rem", opacity: 0.7, marginLeft: "2px" }}>({count})</span>
             </button>
           );
         })}
