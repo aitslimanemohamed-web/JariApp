@@ -39,7 +39,7 @@ export default function FeedPage() {
           </div>
 
           <PublishBar onNewAnnonce={a => setNewAnnonces(prev => [a, ...prev])} />
-          <MyAnnonces />
+          <MyAnnonces newAnnonces={newAnnonces} />
 
           {/* séparateur */}
           <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "24px" }}>

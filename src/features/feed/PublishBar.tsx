@@ -113,7 +113,7 @@ export default function PublishBar({ onNewAnnonce }: Props) {
         <ServiceModal
           initialMode={serviceModal}
           onClose={() => setServiceModal(null)}
-          onSuccess={a => { onNewAnnonce?.(a); setServiceModal(null); }}
+          onSuccess={a => { onNewAnnonce?.(a); }}
         />
       )}
     </>
