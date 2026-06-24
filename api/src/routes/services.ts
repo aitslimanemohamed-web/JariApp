@@ -42,7 +42,7 @@ servicesRouter.post("/", requireAuth, async (req: AuthRequest, res) => {
   if (!result.success) { res.status(400).json({ error: result.error.flatten() }); return; }
 
   const service = await prisma.service.create({
-    data: { ...result.data, providerId: req.userId! },
+    data: { ...result.data, providerId: req.user!.id },
     include: { category: true },
   });
   res.status(201).json(service);

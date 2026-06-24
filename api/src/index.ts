@@ -6,6 +6,7 @@ import { authRouter } from "./routes/auth";
 import { categoriesRouter } from "./routes/categories";
 import { servicesRouter } from "./routes/services";
 import { providersRouter } from "./routes/providers";
+import { annoncesRouter } from "./routes/annonces";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -31,6 +32,7 @@ app.use("/api/v1/auth",       authRouter);
 app.use("/api/v1/categories", categoriesRouter);
 app.use("/api/v1/services",   servicesRouter);
 app.use("/api/v1/providers",  providersRouter);
+app.use("/api/v1/annonces",   annoncesRouter);
 
 app.listen(PORT, () => {
   console.log(`API JariApp    → http://localhost:${PORT}`);

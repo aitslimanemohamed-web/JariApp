@@ -19,6 +19,20 @@ enum BookingStatus {
   CANCELLED
 }
 
+enum AnnonceType {
+  SERVICE
+  DEMANDE
+  VENTE
+  LOCATION
+  EMPLOI
+}
+
+enum AnnonceStatus {
+  ACTIVE
+  PAUSED
+  CLOSED
+}
+
 model User {
   id           String    @id @default(uuid())
   username     String    @unique
@@ -36,6 +50,7 @@ model User {
 
   providerProfile     ProviderProfile?
   services            Service[]
+  annonces            Annonce[]
   bookingsAsClient    Booking[]  @relation("ClientBookings")
   bookingsAsProvider  Booking[]  @relation("ProviderBookings")
   reviewsGiven        Review[]   @relation("ReviewsGiven")
@@ -71,6 +86,7 @@ model Category {
   icon    String
 
   services   Service[]
+  annonces   Annonce[]
   providers  ProviderCategory[]
 
   @@map("categories")
@@ -85,6 +101,46 @@ model ProviderCategory {
 
   @@unique([providerId, categoryId])
   @@map("provider_categories")
+}
+
+// ─── Annonces (système générique marketplace) ────────────────────────────────
+//
+// `details` JSON par type :
+//   SERVICE  → { disponibilite: "IMMEDIATE" | "RDV" | "PARTIEL" }
+//   DEMANDE  → { date_souhaitee: string | null, date_flexible: boolean }
+//   VENTE    → { prix: number, negociable: boolean }
+//   LOCATION → { prix: number, unite: "heure" | "jour" | "semaine" | "mois" }
+//   EMPLOI   → { sens: "RECRUTE" | "CANDIDATE", type_contrat: string }
+//
+model Annonce {
+  id          String        @id @default(uuid())
+  type        AnnonceType
+  status      AnnonceStatus @default(ACTIVE)
+
+  titre       String
+  description String
+  wilayaId    Int           @map("wilaya_id")
+  wilayaName  String        @map("wilaya_name")
+
+  details     Json          @default("{}")
+
+  viewsCount  Int           @default(0) @map("views_count")
+
+  userId      String        @map("user_id")
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  categoryId  String?       @map("category_id")
+  category    Category?     @relation(fields: [categoryId], references: [id])
+
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt      @map("updated_at")
+
+  @@index([type])
+  @@index([userId])
+  @@index([wilayaId])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+  @@map("annonces")
 }
 
 model Service {
