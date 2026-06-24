@@ -130,29 +130,47 @@ export default function ServiceModal({ initialMode, onClose, onSuccess }: Props)
   const canSubmit = !!category && titre.trim().length >= 5 && desc.trim().length >= 10 && !!wilaya;
 
   const handleSubmit = async () => {
-    if (!canSubmit || !user) return;
+    if (!canSubmit || submitting || !user) return;
     setSubmitting(true);
     setError("");
 
-    // Construction de l'annonce locale (optimistic — fonctionne sans backend)
-    const local = buildLocalAnnonce(mode, category!, titre.trim(), desc.trim(), wilaya!, user, date, dateFlexible);
+    const payload = {
+      type:        (mode === "proposer" ? "SERVICE" : "DEMANDE") as "SERVICE" | "DEMANDE",
+      titre:       titre.trim(),
+      description: desc.trim(),
+      wilayaId:    wilaya!.id,
+      wilayaName:  wilaya!.name,
+      details:     mode === "demander"
+        ? { date_souhaitee: dateFlexible ? null : (date || null), date_flexible: dateFlexible }
+        : {},
+    };
 
-    // Tentative API en arrière-plan (silencieuse si backend absent)
     if (token) {
-      api.annonces.create({
-        type:        mode === "proposer" ? "SERVICE" : "DEMANDE",
-        titre:       titre.trim(),
-        description: desc.trim(),
-        wilayaId:    wilaya!.id,
-        wilayaName:  wilaya!.name,
-        details:     mode === "demander"
-          ? { date_souhaitee: dateFlexible ? null : (date || null), date_flexible: dateFlexible }
-          : {},
-      }, token).catch(() => { /* backend optionnel */ });
+      try {
+        // Sauvegarde en base de données
+        const saved = await api.annonces.create(payload, token);
+        setSuccess(true);
+        onSuccess(saved);
+        setSubmitting(false);
+        setTimeout(onClose, 1400);
+        return;
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : "";
+        // Si backend injoignable, on publie quand même localement avec avertissement
+        if (msg.includes("Failed to fetch") || msg.includes("NetworkError") || msg.includes("fetch")) {
+          setError("⚠️ Serveur hors ligne — l'annonce s'affiche localement mais ne sera pas sauvegardée.");
+        } else {
+          setError(msg || "Erreur lors de la publication.");
+          setSubmitting(false);
+          return; // Erreur API réelle (400, 500) → ne pas publier
+        }
+      }
     }
 
+    // Pas de token ou backend hors ligne → publication locale uniquement
+    const local = buildLocalAnnonce(mode, category!, titre.trim(), desc.trim(), wilaya!, user, date, dateFlexible);
     setSuccess(true);
-    onSuccess(local);         // affiche immédiatement dans le feed
+    onSuccess(local);
     setSubmitting(false);
     setTimeout(onClose, 1400);
   };

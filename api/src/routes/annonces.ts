@@ -14,11 +14,11 @@ const AnnonceStatusEnum = z.enum(["ACTIVE", "PAUSED", "CLOSED"]);
 // ─── Schémas details par type ─────────────────────────────────────────────────
 
 const detailsSchemas = {
-  SERVICE:  z.object({ disponibilite: z.enum(["IMMEDIATE", "RDV", "PARTIEL"]) }),
-  DEMANDE:  z.object({ date_souhaitee: z.string().nullable(), date_flexible: z.boolean() }),
-  VENTE:    z.object({ prix: z.number().positive(), negociable: z.boolean().default(false) }),
-  LOCATION: z.object({ prix: z.number().positive(), unite: z.enum(["heure", "jour", "semaine", "mois"]) }),
-  EMPLOI:   z.object({ sens: z.enum(["RECRUTE", "CANDIDATE"]), type_contrat: z.string().optional() }),
+  SERVICE:  z.object({}).passthrough(), // champs libres — disponibilité retirée du formulaire
+  DEMANDE:  z.object({ date_souhaitee: z.string().nullable().optional(), date_flexible: z.boolean().optional() }).passthrough(),
+  VENTE:    z.object({ prix: z.number().positive().optional(), negociable: z.boolean().optional() }).passthrough(),
+  LOCATION: z.object({ prix: z.number().positive().optional(), unite: z.enum(["heure","jour","semaine","mois"]).optional() }).passthrough(),
+  EMPLOI:   z.object({ sens: z.enum(["RECRUTE","CANDIDATE"]).optional(), type_contrat: z.string().optional() }).passthrough(),
 } as const;
 
 // ─── Schémas de validation ─────────────────────────────────────────────────────

@@ -1,6 +1,8 @@
 "use client";
-import { type Annonce as ApiAnnonce } from "@/lib/api";
+import { useEffect, useState } from "react";
+import { api, type Annonce as ApiAnnonce } from "@/lib/api";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Props {
   newAnnonces?: ApiAnnonce[];
@@ -15,17 +17,27 @@ const TYPE_COLOR: Record<string, string> = {
 };
 
 const TYPE_ICON: Record<string, string> = {
-  SERVICE:  "🔧",
-  DEMANDE:  "🔍",
-  VENTE:    "🏷️",
-  EMPLOI:   "💼",
-  LOCATION: "🔑",
+  SERVICE: "🔧", DEMANDE: "🔍", VENTE: "🏷️", EMPLOI: "💼", LOCATION: "🔑",
 };
 
 export default function MyAnnonces({ newAnnonces = [] }: Props) {
   const { t } = useLanguage();
+  const { token } = useAuth();
+  const [dbAnnonces, setDbAnnonces] = useState<ApiAnnonce[]>([]);
 
-  if (newAnnonces.length === 0) return null;
+  useEffect(() => {
+    if (!token) return;
+    api.annonces.me(token)
+      .then(data => setDbAnnonces(data))
+      .catch(() => {}); // pas de connexion DB → rien à afficher
+  }, [token]);
+
+  // Fusion : nouvelles (optimistes) + DB, sans doublons
+  const dbIds    = new Set(dbAnnonces.map(a => a.id));
+  const freshNew = newAnnonces.filter(a => !dbIds.has(a.id));
+  const combined = [...freshNew, ...dbAnnonces];
+
+  if (combined.length === 0) return null;
 
   return (
     <div style={{ marginBottom: "32px" }}>
@@ -34,12 +46,12 @@ export default function MyAnnonces({ newAnnonces = [] }: Props) {
           {t.feed.myAnnonces}
         </h2>
         <span style={{ color: "#94A3B8", fontSize: "0.78rem" }}>
-          {newAnnonces.length} annonce{newAnnonces.length > 1 ? "s" : ""}
+          {combined.length} annonce{combined.length > 1 ? "s" : ""}
         </span>
       </div>
 
       <div style={{ display: "flex", gap: "12px", overflowX: "auto", paddingBottom: "8px" }}>
-        {newAnnonces.map(ann => {
+        {combined.map(ann => {
           const color = TYPE_COLOR[ann.type] ?? "#64748B";
           const icon  = ann.category?.icon ?? TYPE_ICON[ann.type] ?? "📌";
           const label = ann.category?.nameFr ?? ann.type;
@@ -51,15 +63,12 @@ export default function MyAnnonces({ newAnnonces = [] }: Props) {
               padding: "14px", flexShrink: 0,
               position: "relative", overflow: "hidden",
             }}>
-              {/* barre colorée en haut */}
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", backgroundColor: color }} />
               <div style={{ marginTop: "6px" }}>
-                <span style={{ fontSize: "0.7rem", color, fontWeight: 700 }}>
-                  {icon} {label}
-                </span>
+                <span style={{ fontSize: "0.7rem", color, fontWeight: 700 }}>{icon} {label}</span>
                 <div style={{
                   color: "#0F172A", fontWeight: 700, fontSize: "0.84rem",
-                  marginTop: "4px", marginBottom: "6px", lineHeight: 1.3,
+                  marginTop: "4px", marginBottom: "8px", lineHeight: 1.3,
                   display: "-webkit-box", WebkitLineClamp: 2,
                   WebkitBoxOrient: "vertical", overflow: "hidden",
                 }}>
@@ -79,7 +88,6 @@ export default function MyAnnonces({ newAnnonces = [] }: Props) {
           );
         })}
 
-        {/* bouton ajouter */}
         <div style={{
           minWidth: "100px", borderRadius: "14px",
           border: "2px dashed #E5E5E5", backgroundColor: "#FAFAFA",

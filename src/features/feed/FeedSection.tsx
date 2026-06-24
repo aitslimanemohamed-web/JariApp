@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FeedCard, { type Annonce, type AnnonceType } from "./FeedCard"; // AnnonceType utilisé dans GROUP_TYPES
 import { useLanguage } from "@/contexts/LanguageContext";
-import { type Annonce as ApiAnnonce } from "@/lib/api";
+import { api, type Annonce as ApiAnnonce } from "@/lib/api";
 
 // Convertit une annonce API → format FeedCard
 function adaptApiAnnonce(a: ApiAnnonce): Annonce {
@@ -65,11 +65,26 @@ const GROUP_ICONS: Record<GroupKey, string> = {
 interface Props { newAnnonces?: ApiAnnonce[]; }
 
 export default function FeedSection({ newAnnonces = [] }: Props) {
-  const [active, setActive] = useState<GroupKey>("all");
+  const [active, setActive]       = useState<GroupKey>("all");
+  const [dbAnnonces, setDbAnnonces] = useState<ApiAnnonce[]>([]);
+  const [apiReady, setApiReady]   = useState(false);
   const { t } = useLanguage();
 
-  const adapted  = newAnnonces.map(adaptApiAnnonce);
-  const allFeed  = [...adapted, ...MOCK_FEED];
+  useEffect(() => {
+    api.annonces.list()
+      .then(res => { setDbAnnonces(res.data); setApiReady(true); })
+      .catch(() => setApiReady(false)); // fallback mock si backend indisponible
+  }, []);
+
+  // Nouvelles annonces créées en session (optimistes, dédupliquées avec la DB)
+  const dbIds     = new Set(dbAnnonces.map(a => a.id));
+  const freshNew  = newAnnonces.filter(a => !dbIds.has(a.id));
+
+  // Si la DB répond → données réelles ; sinon → mock de démonstration
+  const allFeed = apiReady
+    ? [...freshNew.map(adaptApiAnnonce), ...dbAnnonces.map(adaptApiAnnonce)]
+    : [...freshNew.map(adaptApiAnnonce), ...MOCK_FEED];
+
   const filtered = allFeed.filter(a => GROUP_TYPES[active].includes(a.type));
 
   return (
