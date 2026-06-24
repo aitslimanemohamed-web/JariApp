@@ -5,6 +5,7 @@ const TYPES = [
   { key: "service", label: "Proposer un service", icon: "🔧", color: "#FF6B35", bg: "#FFF0EB" },
   { key: "vente",   label: "Vendre un objet",     icon: "🏷️", color: "#1B4F72", bg: "#EFF6FF" },
   { key: "demande", label: "Publier une demande",  icon: "🔍", color: "#10B981", bg: "#ECFDF5" },
+  { key: "emploi",  label: "Offre / Recherche emploi", icon: "💼", color: "#7C3AED", bg: "#F5F3FF" },
 ];
 
 export default function PublishBar() {
@@ -47,7 +48,7 @@ export default function PublishBar() {
               Publier une annonce
             </div>
             <div style={{ color: "#94A3B8", fontSize: "0.78rem" }}>
-              Service · Vente · Demande
+              Service · Vente · Demande · Emploi
             </div>
           </div>
         </button>
@@ -66,7 +67,7 @@ export default function PublishBar() {
               color: "#94A3B8", fontSize: "1.2rem", lineHeight: 1,
             }}>×</button>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px" }}>
             {TYPES.map(t => (
               <button key={t.key} style={{
                 padding: "16px 10px", borderRadius: "12px", cursor: "pointer",

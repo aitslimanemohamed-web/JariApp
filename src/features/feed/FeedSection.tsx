@@ -15,11 +15,16 @@ const MOCK_FEED: Annonce[] = [
   { id: 10, type: "service", category: "Chauffeur", categoryIcon: "🚖", title: "Chauffeur VTC disponible — Alger", description: "Aéroport, hôpital, rendez-vous. Véhicule propre, ponctuel et discret.", author: "Bilal H.", authorInitial: "B", wilaya: "Alger", price: "500 DA/course", time: "Il y a 4j" },
   { id: 11, type: "demande", category: "Cours particuliers", categoryIcon: "📚", title: "Cours d'anglais pour adulte débutant", description: "2h par semaine à domicile à Constantine. Je peux me déplacer.", author: "Leila S.", authorInitial: "L", wilaya: "Constantine", price: "Selon accord", time: "Il y a 4j" },
   { id: 12, type: "service", category: "Informatique", categoryIcon: "💻", title: "Dépannage PC & installation logiciels", description: "Virus, lenteur, récupération de données, Windows. Déplacement à domicile.", author: "Nassim O.", authorInitial: "N", wilaya: "Blida", price: "1 000 DA", time: "Il y a 5j" },
+  { id: 13, type: "emploi", category: "Restauration", categoryIcon: "🍕", title: "Pizzeria cherche livreur à mi-temps", description: "Scooter fourni. Horaires flexibles soir et week-end. Sérieux et ponctuel.", author: "Pizza Express", authorInitial: "P", wilaya: "Alger", price: "25 000 DA/mois", time: "Il y a 1j", emploiSens: "recrute" },
+  { id: 14, type: "emploi", category: "Restauration", categoryIcon: "☕", title: "Café moderne cherche serveur expérimenté", description: "CDI temps plein. Bonne présentation exigée. Expérience minimum 1 an.", author: "Café Central", authorInitial: "C", wilaya: "Oran", price: "30 000 DA/mois", time: "Il y a 2j", emploiSens: "recrute" },
+  { id: 15, type: "emploi", category: "Pâtisserie", categoryIcon: "🧁", title: "Pâtissier cherche poste — disponible immédiatement", description: "5 ans d'expérience. Spécialité gâteaux traditionnels et modernes. Sérieux.", author: "Hamza K.", authorInitial: "H", wilaya: "Constantine", price: "À négocier", time: "Il y a 3j", emploiSens: "candidate" },
+  { id: 16, type: "emploi", category: "Commerce", categoryIcon: "🏪", title: "Supermarché recrute caissière", description: "Temps plein. Quartier Hydra. Expérience caisse souhaitée. Formation assurée.", author: "Marché Plus", authorInitial: "M", wilaya: "Alger", price: "28 000 DA/mois", time: "Il y a 4j", emploiSens: "recrute" },
 ];
 
 const FILTERS: { key: AnnonceType | "all"; label: string }[] = [
   { key: "all",     label: "Tout" },
   { key: "service", label: "Services" },
+  { key: "emploi",  label: "Emplois" },
   { key: "vente",   label: "Ventes" },
   { key: "demande", label: "Demandes" },
 ];

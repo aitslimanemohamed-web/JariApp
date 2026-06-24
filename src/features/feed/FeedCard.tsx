@@ -1,6 +1,6 @@
 "use client";
 
-export type AnnonceType = "service" | "vente" | "demande";
+export type AnnonceType = "service" | "vente" | "demande" | "emploi";
 
 export interface Annonce {
   id: number;
@@ -15,12 +15,14 @@ export interface Annonce {
   price?: string;
   time: string;
   isOwn?: boolean;
+  emploiSens?: "recrute" | "candidate";
 }
 
 const TYPE_CONFIG: Record<AnnonceType, { label: string; color: string; bg: string }> = {
   service: { label: "Service",  color: "#FF6B35", bg: "#FFF0EB" },
   vente:   { label: "Vente",    color: "#1B4F72", bg: "#EFF6FF" },
   demande: { label: "Demande",  color: "#10B981", bg: "#ECFDF5" },
+  emploi:  { label: "Emploi",   color: "#7C3AED", bg: "#F5F3FF" },
 };
 
 export default function FeedCard({ annonce }: { annonce: Annonce }) {
@@ -66,7 +68,9 @@ export default function FeedCard({ annonce }: { annonce: Annonce }) {
             padding: "3px 10px", borderRadius: "100px",
             letterSpacing: "0.3px",
           }}>
-            {cfg.label}
+            {annonce.type === "emploi" && annonce.emploiSens === "recrute" ? "Recrute" :
+             annonce.type === "emploi" && annonce.emploiSens === "candidate" ? "Candidate" :
+             cfg.label}
           </span>
           <span style={{ fontSize: "0.8rem", color: "#64748B" }}>
             {annonce.categoryIcon} {annonce.category}
