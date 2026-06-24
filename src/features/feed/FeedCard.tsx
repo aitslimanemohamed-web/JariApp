@@ -1,6 +1,6 @@
 "use client";
 
-export type AnnonceType = "service" | "vente" | "demande" | "emploi";
+export type AnnonceType = "service" | "vente" | "demande" | "emploi" | "location";
 
 export interface Annonce {
   id: number;
@@ -23,6 +23,7 @@ const TYPE_CONFIG: Record<AnnonceType, { label: string; color: string; bg: strin
   vente:   { label: "Vente",    color: "#1B4F72", bg: "#EFF6FF" },
   demande: { label: "Demande",  color: "#10B981", bg: "#ECFDF5" },
   emploi:  { label: "Emploi",   color: "#7C3AED", bg: "#F5F3FF" },
+  location: { label: "Location", color: "#D97706", bg: "#FFFBEB" },
 };
 
 export default function FeedCard({ annonce }: { annonce: Annonce }) {

@@ -19,9 +19,11 @@ const MOCK_MY: Annonce[] = [
 ];
 
 const TYPE_COLOR: Record<string, string> = {
-  service: "#FF6B35",
-  vente:   "#1B4F72",
-  demande: "#10B981",
+  service:  "#FF6B35",
+  vente:    "#1B4F72",
+  demande:  "#10B981",
+  emploi:   "#7C3AED",
+  location: "#D97706",
 };
 
 export default function MyAnnonces() {

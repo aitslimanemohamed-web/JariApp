@@ -18,15 +18,20 @@ const MOCK_FEED: Annonce[] = [
   { id: 13, type: "emploi", category: "Restauration", categoryIcon: "🍕", title: "Pizzeria cherche livreur à mi-temps", description: "Scooter fourni. Horaires flexibles soir et week-end. Sérieux et ponctuel.", author: "Pizza Express", authorInitial: "P", wilaya: "Alger", price: "25 000 DA/mois", time: "Il y a 1j", emploiSens: "recrute" },
   { id: 14, type: "emploi", category: "Restauration", categoryIcon: "☕", title: "Café moderne cherche serveur expérimenté", description: "CDI temps plein. Bonne présentation exigée. Expérience minimum 1 an.", author: "Café Central", authorInitial: "C", wilaya: "Oran", price: "30 000 DA/mois", time: "Il y a 2j", emploiSens: "recrute" },
   { id: 15, type: "emploi", category: "Pâtisserie", categoryIcon: "🧁", title: "Pâtissier cherche poste — disponible immédiatement", description: "5 ans d'expérience. Spécialité gâteaux traditionnels et modernes. Sérieux.", author: "Hamza K.", authorInitial: "H", wilaya: "Constantine", price: "À négocier", time: "Il y a 3j", emploiSens: "candidate" },
-  { id: 16, type: "emploi", category: "Commerce", categoryIcon: "🏪", title: "Supermarché recrute caissière", description: "Temps plein. Quartier Hydra. Expérience caisse souhaitée. Formation assurée.", author: "Marché Plus", authorInitial: "M", wilaya: "Alger", price: "28 000 DA/mois", time: "Il y a 4j", emploiSens: "recrute" },
+  { id: 16, type: "emploi",   category: "Commerce",     categoryIcon: "🏪", title: "Supermarché recrute caissière", description: "Temps plein. Quartier Hydra. Expérience caisse souhaitée. Formation assurée.", author: "Marché Plus", authorInitial: "M", wilaya: "Alger", price: "28 000 DA/mois", time: "Il y a 4j", emploiSens: "recrute" },
+  { id: 17, type: "location", category: "Véhicule",     categoryIcon: "🚗", title: "Renault Symbol 2018 — location journalière", description: "Climatisée, bon état. Kilométrage illimité sur Alger et périphérie.", author: "Walid R.", authorInitial: "W", wilaya: "Alger", price: "3 500 DA/j", time: "Il y a 3h" },
+  { id: 18, type: "location", category: "Immobilier",   categoryIcon: "🏠", title: "Appartement F3 meublé — location courte durée", description: "Wifi, cuisine équipée, climatisé. Idéal déplacement professionnel.", author: "Houssem A.", authorInitial: "H", wilaya: "Oran", price: "4 500 DA/nuit", time: "Il y a 5h" },
+  { id: 19, type: "location", category: "Outillage",    categoryIcon: "🔨", title: "Perceuse à percussion Bosch — location week-end", description: "Parfait état, accessoires inclus. Caution 5 000 DA.", author: "Kamel D.", authorInitial: "K", wilaya: "Blida", price: "500 DA/j", time: "Hier" },
+  { id: 20, type: "location", category: "Électroménager", categoryIcon: "🧹", title: "Aspirateur industriel à louer", description: "Idéal fin de chantier, nettoyage après travaux. Livraison possible.", author: "Samir B.", authorInitial: "S", wilaya: "Constantine", price: "800 DA/j", time: "Il y a 2j" },
 ];
 
 const FILTERS: { key: AnnonceType | "all"; label: string }[] = [
   { key: "all",     label: "Tout" },
   { key: "service", label: "Services" },
-  { key: "emploi",  label: "Emplois" },
-  { key: "vente",   label: "Ventes" },
-  { key: "demande", label: "Demandes" },
+  { key: "emploi",   label: "Emplois" },
+  { key: "location", label: "Locations" },
+  { key: "vente",    label: "Ventes" },
+  { key: "demande",  label: "Demandes" },
 ];
 
 export default function FeedSection() {
