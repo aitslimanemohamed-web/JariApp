@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useLanguage, type Lang } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
+import UserMenu from "./UserMenu";
 
 const LANGS: { code: Lang; label: string }[] = [
   { code: "fr", label: "FR" },
@@ -11,7 +12,7 @@ const LANGS: { code: Lang; label: string }[] = [
 
 export default function Navbar() {
   const { t, lang, setLang, dir } = useLanguage();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
     <nav dir={dir} style={{
@@ -76,32 +77,7 @@ export default function Navbar() {
 
           {/* Auth */}
           {user ? (
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <div style={{
-                display: "flex", alignItems: "center", gap: "7px",
-                backgroundColor: "#FFF4F0", borderRadius: "10px", padding: "6px 12px",
-              }}>
-                <div style={{
-                  width: "26px", height: "26px", borderRadius: "50%", flexShrink: 0,
-                  background: "linear-gradient(135deg, #FF6B35, #FF8C5A)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  color: "white", fontWeight: 700, fontSize: "0.75rem",
-                }}>
-                  {user.firstName.charAt(0).toUpperCase()}
-                </div>
-                <span style={{ color: "#FF6B35", fontWeight: 600, fontSize: "0.85rem", whiteSpace: "nowrap" }}>
-                  {user.firstName}
-                </span>
-              </div>
-              <button onClick={logout} style={{
-                color: "#777", fontWeight: 600, fontSize: "0.82rem",
-                padding: "7px 12px", borderRadius: "9px",
-                border: "1.5px solid #E5E5E5", backgroundColor: "white",
-                cursor: "pointer", whiteSpace: "nowrap",
-              }}>
-                {t.nav.logout}
-              </button>
-            </div>
+            <UserMenu />
           ) : (
             <div className="jari-nav-login" style={{ alignItems: "center", gap: "8px" }}>
               <Link href="/login" style={{

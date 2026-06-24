@@ -12,6 +12,13 @@ const translations = {
       login: "Connexion",
       register: "S'inscrire",
       logout: "Déconnexion",
+      menu: {
+        profile: "Mon profil",
+        notifications: "Notifications",
+        location: "Ma localisation",
+        settings: "Paramètres",
+        logout: "Déconnexion",
+      },
     },
     auth: {
       login: {
@@ -132,6 +139,13 @@ const translations = {
       login: "تسجيل الدخول",
       register: "إنشاء حساب",
       logout: "تسجيل الخروج",
+      menu: {
+        profile: "ملفي الشخصي",
+        notifications: "الإشعارات",
+        location: "موقعي",
+        settings: "الإعدادات",
+        logout: "تسجيل الخروج",
+      },
     },
     auth: {
       login: {
@@ -252,6 +266,13 @@ const translations = {
       login: "Log in",
       register: "Sign up",
       logout: "Log out",
+      menu: {
+        profile: "My profile",
+        notifications: "Notifications",
+        location: "My location",
+        settings: "Settings",
+        logout: "Log out",
+      },
     },
     auth: {
       login: {
