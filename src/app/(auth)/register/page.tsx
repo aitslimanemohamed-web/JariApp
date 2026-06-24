@@ -62,7 +62,7 @@ export default function RegisterPage() {
         wilaya: form.wilaya ? Number(form.wilaya) : undefined,
       });
       await login(form.username, form.password);
-      router.push(form.role === "PRESTATAIRE" ? "/onboarding" : "/");
+      router.push("/");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Erreur lors de l'inscription");
     } finally {
@@ -80,21 +80,6 @@ export default function RegisterPage() {
         <p style={{ color: "#888", fontSize: "0.95rem", marginBottom: "24px" }}>
           {a.subtitle}
         </p>
-
-        {/* Role selector */}
-        <div style={{ display: "flex", gap: "12px", marginBottom: "24px" }}>
-          {(["CLIENT", "PRESTATAIRE"] as const).map(r => (
-            <button key={r} type="button" onClick={() => set("role", r)} style={{
-              flex: 1, padding: "12px", borderRadius: "10px", border: "2px solid",
-              borderColor: form.role === r ? "#FF6B35" : "#E5E5E5",
-              backgroundColor: form.role === r ? "#FFF0EB" : "white",
-              color: form.role === r ? "#FF6B35" : "#888",
-              fontWeight: 600, fontSize: "0.9rem", cursor: "pointer",
-            }}>
-              {r === "CLIENT" ? a.seekingLabel : a.providingLabel}
-            </button>
-          ))}
-        </div>
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
 
