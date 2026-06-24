@@ -1,33 +1,31 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { WILAYAS } from "@/lib/wilayas";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { api, type Annonce } from "@/lib/api";
 
 type Mode = "proposer" | "demander";
 
-const CATEGORIES = [
-  { icon: "🔧", label: "Plomberie" },
-  { icon: "⚡", label: "Électricité" },
-  { icon: "❄️", label: "Climatisation" },
-  { icon: "🚗", label: "Mécanique" },
-  { icon: "🧹", label: "Ménage" },
-  { icon: "📚", label: "Cours" },
-  { icon: "🖌️", label: "Peinture" },
-  { icon: "🚖", label: "Chauffeur" },
-  { icon: "🧱", label: "Maçonnerie" },
-  { icon: "💻", label: "Informatique" },
-  { icon: "📦", label: "Déménagement" },
-  { icon: "🔌", label: "Électroménager" },
-];
-
-const DISPOS = [
-  { key: "immediate",  label: "Immédiate",       icon: "⚡" },
-  { key: "rdv",        label: "Sur rendez-vous",  icon: "📅" },
-  { key: "partiel",    label: "Temps partiel",    icon: "🕐" },
+const CATEGORIES_META = [
+  { slug: "plomberie",      icon: "🔧" },
+  { slug: "electricite",    icon: "⚡" },
+  { slug: "climatisation",  icon: "❄️" },
+  { slug: "mecanique",      icon: "🚗" },
+  { slug: "menage",         icon: "🧹" },
+  { slug: "cours",          icon: "📚" },
+  { slug: "peinture",       icon: "🖌️" },
+  { slug: "chauffeur",      icon: "🚖" },
+  { slug: "maconnerie",     icon: "🧱" },
+  { slug: "informatique",   icon: "💻" },
+  { slug: "demenagement",   icon: "📦" },
+  { slug: "electromenager", icon: "🔌" },
 ];
 
 interface Props {
   initialMode: Mode;
   onClose: () => void;
+  onSuccess: (annonce: Annonce) => void;
 }
 
 const inputStyle: React.CSSProperties = {
@@ -37,32 +35,116 @@ const inputStyle: React.CSSProperties = {
   fontFamily: "inherit",
 };
 
-export default function ServiceModal({ initialMode, onClose }: Props) {
-  const [mode, setMode]       = useState<Mode>(initialMode);
-  const [category, setCategory] = useState("");
-  const [titre, setTitre]     = useState("");
-  const [desc, setDesc]       = useState("");
-  const [wilaya, setWilaya]   = useState("");
-  const [dispo, setDispo]     = useState("immediate");
-  const [date, setDate]       = useState("");
-  const [dateFlexible, setDateFlexible] = useState(false);
-  const overlayRef = useRef<HTMLDivElement>(null);
+export default function ServiceModal({ initialMode, onClose, onSuccess }: Props) {
+  const { t, lang, dir } = useLanguage();
+  const { token } = useAuth();
 
-  // fermeture ESC
+  const [mode, setMode]           = useState<Mode>(initialMode);
+  const [catSearch, setCatSearch] = useState("");
+  const [catOpen, setCatOpen]     = useState(false);
+  const [category, setCategory]   = useState<{ slug: string; label: string; icon: string } | null>(null);
+  const [titre, setTitre]         = useState("");
+  const [desc, setDesc]           = useState("");
+  const [wilaya, setWilaya]       = useState<{ id: number; name: string } | null>(null);
+  const [date, setDate]           = useState("");
+  const [dateFlexible, setDateFlexible] = useState(false);
+  const [submitting, setSubmitting]     = useState(false);
+  const [error, setError]               = useState("");
+  const [success, setSuccess]           = useState(false);
+
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const catRef     = useRef<HTMLDivElement>(null);
+
+  // Libellés catégories selon la langue
+  const catLabels = t.services.items; // 12 items alignés sur CATEGORIES_META
+
+  const categoriesWithLabel = CATEGORIES_META.map((c, i) => ({
+    ...c,
+    label: catLabels[i] ?? c.slug,
+  }));
+
+  const filteredCats = catSearch
+    ? categoriesWithLabel.filter(c => c.label.toLowerCase().includes(catSearch.toLowerCase()))
+    : categoriesWithLabel;
+
+  // Fermeture ESC
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
   }, [onClose]);
 
-  // reset champs spécifiques au changement de mode
+  // Fermeture combobox au clic dehors
   useEffect(() => {
-    setDispo("immediate");
+    const handler = (e: MouseEvent) => {
+      if (catRef.current && !catRef.current.contains(e.target as Node)) setCatOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  useEffect(() => {
     setDate("");
     setDateFlexible(false);
   }, [mode]);
 
-  const canSubmit = category && titre.trim() && desc.trim() && wilaya;
+  const handleSelectCat = useCallback((cat: typeof categoriesWithLabel[0]) => {
+    setCategory(cat);
+    setCatSearch(cat.label);
+    setCatOpen(false);
+  }, [categoriesWithLabel]);
+
+  const canSubmit = category && titre.trim().length >= 5 && desc.trim().length >= 10 && wilaya;
+
+  const handleSubmit = async () => {
+    if (!canSubmit || !token) return;
+    setSubmitting(true);
+    setError("");
+    try {
+      const details = mode === "demander"
+        ? { date_souhaitee: dateFlexible ? null : (date || null), date_flexible: dateFlexible }
+        : {};
+
+      const annonce = await api.annonces.create({
+        type:        mode === "proposer" ? "SERVICE" : "DEMANDE",
+        titre:       titre.trim(),
+        description: desc.trim(),
+        wilayaId:    wilaya!.id,
+        wilayaName:  wilaya!.name,
+        details,
+      }, token);
+
+      setSuccess(true);
+      setTimeout(() => { onSuccess(annonce); onClose(); }, 1200);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Erreur lors de la publication");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (success) {
+    return (
+      <div style={{
+        position: "fixed", inset: 0, zIndex: 500,
+        backgroundColor: "rgba(15,23,42,0.45)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+      }}>
+        <div style={{
+          backgroundColor: "white", borderRadius: "20px", padding: "48px 40px",
+          textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.18)",
+        }}>
+          <div style={{ fontSize: "3rem", marginBottom: "16px" }}>✅</div>
+          <div style={{ color: "#0F172A", fontWeight: 800, fontSize: "1.1rem" }}>
+            Annonce publiée !
+          </div>
+          <div style={{ color: "#64748B", fontSize: "0.85rem", marginTop: "6px" }}>
+            Elle apparaît maintenant dans le feed.
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -75,27 +157,27 @@ export default function ServiceModal({ initialMode, onClose }: Props) {
         padding: "16px",
       }}
     >
-      <div style={{
+      <div dir={dir} style={{
         backgroundColor: "white", borderRadius: "20px",
-        width: "100%", maxWidth: "520px",
-        maxHeight: "90vh", display: "flex", flexDirection: "column",
+        width: "100%", maxWidth: "500px",
+        maxHeight: "92vh", display: "flex", flexDirection: "column",
         boxShadow: "0 20px 60px rgba(0,0,0,0.18)",
         overflow: "hidden",
       }}>
 
         {/* ── Header ── */}
         <div style={{ padding: "20px 24px 0", flexShrink: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "18px" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
             <span style={{ color: "#0F172A", fontWeight: 800, fontSize: "1rem" }}>
               Publier une annonce de service
             </span>
             <button onClick={onClose} style={{
               background: "none", border: "none", cursor: "pointer",
-              color: "#94A3B8", fontSize: "1.3rem", lineHeight: 1, padding: "2px 6px",
+              color: "#94A3B8", fontSize: "1.3rem", lineHeight: 1, padding: "2px 8px",
             }}>×</button>
           </div>
 
-          {/* Toggle Proposer / Demander */}
+          {/* Toggle */}
           <div style={{
             display: "grid", gridTemplateColumns: "1fr 1fr",
             backgroundColor: "#F4F6F8", borderRadius: "12px", padding: "4px",
@@ -118,32 +200,62 @@ export default function ServiceModal({ initialMode, onClose }: Props) {
         </div>
 
         {/* ── Corps scrollable ── */}
-        <div style={{ overflowY: "auto", padding: "0 24px 24px", display: "flex", flexDirection: "column", gap: "18px" }}>
+        <div style={{ overflowY: "auto", padding: "0 24px 24px", display: "flex", flexDirection: "column", gap: "16px" }}>
 
-          {/* Catégorie */}
-          <div>
-            <label style={{ display: "block", color: "#334155", fontWeight: 600, fontSize: "0.82rem", marginBottom: "10px" }}>
+          {/* Catégorie — combobox searchable */}
+          <div ref={catRef} style={{ position: "relative" }}>
+            <label style={{ display: "block", color: "#334155", fontWeight: 600, fontSize: "0.82rem", marginBottom: "6px" }}>
               Catégorie *
             </label>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "8px" }}>
-              {CATEGORIES.map(cat => {
-                const isSelected = category === cat.label;
-                return (
-                  <button key={cat.label} onClick={() => setCategory(cat.label)} style={{
-                    padding: "10px 6px", borderRadius: "10px", cursor: "pointer",
-                    backgroundColor: isSelected ? "#FFF0EB" : "#F8FAFC",
-                    border: isSelected ? "1.5px solid #FF6B35" : "1.5px solid #EEF0F4",
-                    display: "flex", flexDirection: "column", alignItems: "center", gap: "4px",
-                    transition: "all 0.12s",
-                  }}>
-                    <span style={{ fontSize: "1.3rem" }}>{cat.icon}</span>
-                    <span style={{ fontSize: "0.65rem", color: isSelected ? "#FF6B35" : "#64748B", fontWeight: isSelected ? 700 : 500, textAlign: "center" }}>
-                      {cat.label}
-                    </span>
-                  </button>
-                );
-              })}
+            <div style={{ position: "relative" }}>
+              <input
+                value={catSearch}
+                onChange={e => { setCatSearch(e.target.value); setCategory(null); setCatOpen(true); }}
+                onFocus={() => setCatOpen(true)}
+                placeholder="Rechercher une catégorie..."
+                style={{ ...inputStyle, paddingRight: "36px" }}
+                dir="auto"
+              />
+              {category && (
+                <span style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", fontSize: "1rem" }}>
+                  {category.icon}
+                </span>
+              )}
+              <span style={{
+                position: "absolute", right: "12px", top: "50%",
+                transform: `translateY(-50%) rotate(${catOpen ? "180deg" : "0deg"})`,
+                color: "#94A3B8", fontSize: "0.7rem", transition: "transform 0.15s",
+                pointerEvents: "none",
+              }}>▼</span>
             </div>
+
+            {catOpen && (
+              <div style={{
+                position: "absolute", top: "calc(100% + 4px)", left: 0, right: 0,
+                backgroundColor: "white", borderRadius: "12px",
+                border: "1.5px solid #EEF0F4",
+                boxShadow: "0 8px 24px rgba(0,0,0,0.10)",
+                zIndex: 10, maxHeight: "220px", overflowY: "auto",
+              }}>
+                {filteredCats.length === 0 ? (
+                  <div style={{ padding: "12px 14px", color: "#94A3B8", fontSize: "0.85rem" }}>
+                    Aucune catégorie trouvée
+                  </div>
+                ) : filteredCats.map(cat => (
+                  <button key={cat.slug} onMouseDown={() => handleSelectCat(cat)} style={{
+                    width: "100%", display: "flex", alignItems: "center", gap: "10px",
+                    padding: "10px 14px", border: "none", backgroundColor: "transparent",
+                    cursor: "pointer", textAlign: "left", transition: "background 0.1s",
+                  }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#F8FAFC"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = "transparent"; }}
+                  >
+                    <span style={{ fontSize: "1.1rem", width: "24px", textAlign: "center" }}>{cat.icon}</span>
+                    <span style={{ color: "#334155", fontSize: "0.88rem", fontWeight: 500 }}>{cat.label}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Titre */}
@@ -156,6 +268,8 @@ export default function ServiceModal({ initialMode, onClose }: Props) {
               onChange={e => setTitre(e.target.value)}
               placeholder={mode === "proposer" ? "Ex : Plombier disponible à Alger" : "Ex : Cherche électricien pour fuite"}
               style={inputStyle}
+              dir="auto"
+              lang={lang}
             />
           </div>
 
@@ -168,11 +282,16 @@ export default function ServiceModal({ initialMode, onClose }: Props) {
               value={desc}
               onChange={e => setDesc(e.target.value)}
               placeholder={mode === "proposer"
-                ? "Décrivez votre service, votre expérience, zones d'intervention..."
+                ? "Décrivez votre service, zones d'intervention, expérience..."
                 : "Décrivez votre besoin en détail..."}
               rows={3}
               style={{ ...inputStyle, resize: "none", lineHeight: 1.6 }}
+              dir="auto"
+              lang={lang}
             />
+            <div style={{ textAlign: "right", color: "#94A3B8", fontSize: "0.7rem", marginTop: "4px" }}>
+              {desc.length} / 10 min
+            </div>
           </div>
 
           {/* Wilaya */}
@@ -180,41 +299,25 @@ export default function ServiceModal({ initialMode, onClose }: Props) {
             <label style={{ display: "block", color: "#334155", fontWeight: 600, fontSize: "0.82rem", marginBottom: "6px" }}>
               Wilaya *
             </label>
-            <select value={wilaya} onChange={e => setWilaya(e.target.value)} style={{ ...inputStyle, cursor: "pointer" }}>
+            <select
+              value={wilaya?.id ?? ""}
+              onChange={e => {
+                const found = WILAYAS.find(w => w.id === Number(e.target.value));
+                setWilaya(found ?? null);
+              }}
+              style={{ ...inputStyle, cursor: "pointer" }}
+            >
               <option value="">Sélectionner votre wilaya</option>
               {WILAYAS.map(w => (
-                <option key={w.id} value={w.name}>{w.id.toString().padStart(2, "0")} — {w.name}</option>
+                <option key={w.id} value={w.id}>
+                  {w.id.toString().padStart(2, "0")} — {w.name}
+                </option>
               ))}
             </select>
           </div>
 
-          {/* Champ spécifique selon le mode */}
-          {mode === "proposer" ? (
-            <div>
-              <label style={{ display: "block", color: "#334155", fontWeight: 600, fontSize: "0.82rem", marginBottom: "10px" }}>
-                Disponibilité
-              </label>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
-                {DISPOS.map(d => {
-                  const isSelected = dispo === d.key;
-                  return (
-                    <button key={d.key} onClick={() => setDispo(d.key)} style={{
-                      padding: "12px 8px", borderRadius: "10px", cursor: "pointer",
-                      backgroundColor: isSelected ? "#FFF0EB" : "#F8FAFC",
-                      border: isSelected ? "1.5px solid #FF6B35" : "1.5px solid #EEF0F4",
-                      display: "flex", flexDirection: "column", alignItems: "center", gap: "5px",
-                      transition: "all 0.12s",
-                    }}>
-                      <span style={{ fontSize: "1.2rem" }}>{d.icon}</span>
-                      <span style={{ fontSize: "0.7rem", color: isSelected ? "#FF6B35" : "#64748B", fontWeight: isSelected ? 700 : 500, textAlign: "center", lineHeight: 1.3 }}>
-                        {d.label}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          ) : (
+          {/* Date souhaitée — uniquement pour "demander" */}
+          {mode === "demander" && (
             <div>
               <label style={{ display: "block", color: "#334155", fontWeight: 600, fontSize: "0.82rem", marginBottom: "6px" }}>
                 Date souhaitée
@@ -238,15 +341,28 @@ export default function ServiceModal({ initialMode, onClose }: Props) {
               </label>
             </div>
           )}
+
+          {/* Erreur */}
+          {error && (
+            <div style={{
+              backgroundColor: "#FFF5F5", border: "1px solid #FED7D7",
+              borderRadius: "10px", padding: "10px 14px",
+              color: "#C53030", fontSize: "0.82rem",
+            }}>
+              {error}
+            </div>
+          )}
         </div>
 
-        {/* ── Footer bouton ── */}
+        {/* ── Footer ── */}
         <div style={{ padding: "16px 24px", borderTop: "1px solid #F0F0F0", flexShrink: 0 }}>
           <button
-            disabled={!canSubmit}
+            onClick={handleSubmit}
+            disabled={!canSubmit || submitting}
             style={{
               width: "100%", padding: "13px",
-              borderRadius: "12px", border: "none", cursor: canSubmit ? "pointer" : "not-allowed",
+              borderRadius: "12px", border: "none",
+              cursor: canSubmit && !submitting ? "pointer" : "not-allowed",
               background: canSubmit ? "linear-gradient(135deg, #FF6B35, #FF5520)" : "#E5E5E5",
               color: canSubmit ? "white" : "#94A3B8",
               fontWeight: 700, fontSize: "0.95rem",
@@ -254,7 +370,7 @@ export default function ServiceModal({ initialMode, onClose }: Props) {
               transition: "all 0.15s",
             }}
           >
-            {mode === "proposer" ? "Publier mon service" : "Publier ma demande"}
+            {submitting ? "Publication..." : mode === "proposer" ? "Publier mon service" : "Publier ma demande"}
           </button>
         </div>
       </div>

@@ -1,8 +1,9 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { type Annonce } from "@/lib/api";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import PublishBar from "@/features/feed/PublishBar";
@@ -13,6 +14,7 @@ export default function FeedPage() {
   const { user, loading } = useAuth();
   const { t } = useLanguage();
   const router = useRouter();
+  const [newAnnonces, setNewAnnonces] = useState<Annonce[]>([]);
 
   useEffect(() => {
     if (!loading && !user) router.replace("/login");
@@ -36,7 +38,7 @@ export default function FeedPage() {
             </p>
           </div>
 
-          <PublishBar />
+          <PublishBar onNewAnnonce={a => setNewAnnonces(prev => [a, ...prev])} />
           <MyAnnonces />
 
           {/* séparateur */}
@@ -48,7 +50,7 @@ export default function FeedPage() {
             <div style={{ flex: 1, height: "1px", backgroundColor: "#EEF0F4" }} />
           </div>
 
-          <FeedSection />
+          <FeedSection newAnnonces={newAnnonces} />
         </div>
       </main>
       <Footer />

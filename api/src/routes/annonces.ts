@@ -27,7 +27,7 @@ const baseSchema = z.object({
   type:        AnnonceTypeEnum,
   titre:       z.string().min(5).max(200),
   description: z.string().min(10),
-  wilayaId:    z.number().int().min(1).max(58),
+  wilayaId:    z.number().int().min(1).max(58), // 58 wilayas depuis 2019
   wilayaName:  z.string().min(2),
   categoryId:  z.string().uuid().optional(),
   details:     z.record(z.unknown()).default({}),

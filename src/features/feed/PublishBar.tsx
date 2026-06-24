@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import ServiceModal from "@/features/services/ServiceModal";
+import { type Annonce } from "@/lib/api";
 
 type ServiceMode = "proposer" | "demander";
 
@@ -13,7 +14,9 @@ const TYPE_META = [
   { key: "location", icon: "🔑", color: "#D97706", bg: "#FFFBEB" },
 ] as const;
 
-export default function PublishBar() {
+interface Props { onNewAnnonce?: (a: Annonce) => void; }
+
+export default function PublishBar({ onNewAnnonce }: Props) {
   const [open, setOpen] = useState(false);
   const [serviceModal, setServiceModal] = useState<ServiceMode | null>(null);
   const { t } = useLanguage();
@@ -110,6 +113,7 @@ export default function PublishBar() {
         <ServiceModal
           initialMode={serviceModal}
           onClose={() => setServiceModal(null)}
+          onSuccess={a => { onNewAnnonce?.(a); setServiceModal(null); }}
         />
       )}
     </>

@@ -2,6 +2,29 @@
 import { useState } from "react";
 import FeedCard, { type Annonce, type AnnonceType } from "./FeedCard"; // AnnonceType utilisé dans GROUP_TYPES
 import { useLanguage } from "@/contexts/LanguageContext";
+import { type Annonce as ApiAnnonce } from "@/lib/api";
+
+// Convertit une annonce API → format FeedCard
+function adaptApiAnnonce(a: ApiAnnonce): Annonce {
+  const typeMap: Record<string, AnnonceType> = {
+    SERVICE: "service", DEMANDE: "demande", VENTE: "vente",
+    LOCATION: "location", EMPLOI: "emploi",
+  };
+  return {
+    id: Number(a.id.replace(/-/g, "").slice(0, 8)) || Math.random(),
+    type:          typeMap[a.type] ?? "service",
+    category:      a.category?.nameFr ?? "Autre",
+    categoryIcon:  a.category?.icon  ?? "📌",
+    title:         a.titre,
+    description:   a.description,
+    author:        `${a.user.firstName} ${a.user.lastName}`,
+    authorInitial: a.user.firstName.charAt(0).toUpperCase(),
+    wilaya:        a.wilayaName,
+    time:          "À l'instant",
+    isOwn:         true,
+    ...(a.type === "EMPLOI" && { emploiSens: (a.details as { sens?: "recrute" | "candidate" }).sens }),
+  };
+}
 
 const MOCK_FEED: Annonce[] = [
   { id: 1, type: "service", category: "Plomberie", categoryIcon: "🔧", title: "Plombier professionnel disponible", description: "Dépannage, installation, réparation. Disponible 7j/7 à Alger centre et périphérie.", author: "Karim B.", authorInitial: "K", wilaya: "Alger", price: "2 000 DA/h", time: "Il y a 2h" },
@@ -39,11 +62,15 @@ const GROUP_ICONS: Record<GroupKey, string> = {
   all: "✦", marche: "🏷️", services: "🔧", emploi: "💼",
 };
 
-export default function FeedSection() {
+interface Props { newAnnonces?: ApiAnnonce[]; }
+
+export default function FeedSection({ newAnnonces = [] }: Props) {
   const [active, setActive] = useState<GroupKey>("all");
   const { t } = useLanguage();
 
-  const filtered = MOCK_FEED.filter(a => GROUP_TYPES[active].includes(a.type));
+  const adapted  = newAnnonces.map(adaptApiAnnonce);
+  const allFeed  = [...adapted, ...MOCK_FEED];
+  const filtered = allFeed.filter(a => GROUP_TYPES[active].includes(a.type));
 
   return (
     <div>
@@ -52,7 +79,7 @@ export default function FeedSection() {
         {(Object.keys(GROUP_TYPES) as GroupKey[]).map(key => {
           const isActive = active === key;
           const label = t.feed.filters[key];
-          const count = MOCK_FEED.filter(a => GROUP_TYPES[key].includes(a.type)).length;
+          const count = allFeed.filter(a => GROUP_TYPES[key].includes(a.type)).length;
           return (
             <button key={key} onClick={() => setActive(key)} style={{
               padding: "8px 18px", borderRadius: "100px", cursor: "pointer",
