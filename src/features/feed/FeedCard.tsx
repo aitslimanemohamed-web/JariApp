@@ -1,4 +1,5 @@
 "use client";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export type AnnonceType = "service" | "vente" | "demande" | "emploi" | "location";
 
@@ -27,6 +28,7 @@ const TYPE_CONFIG: Record<AnnonceType, { label: string; color: string; bg: strin
 };
 
 export default function FeedCard({ annonce }: { annonce: Annonce }) {
+  const { t } = useLanguage();
   const cfg = TYPE_CONFIG[annonce.type];
 
   return (
@@ -69,9 +71,9 @@ export default function FeedCard({ annonce }: { annonce: Annonce }) {
             padding: "3px 10px", borderRadius: "100px",
             letterSpacing: "0.3px",
           }}>
-            {annonce.type === "emploi" && annonce.emploiSens === "recrute" ? "Recrute" :
-             annonce.type === "emploi" && annonce.emploiSens === "candidate" ? "Candidate" :
-             cfg.label}
+            {annonce.type === "emploi" && annonce.emploiSens === "recrute" ? t.feed.types.recrute :
+             annonce.type === "emploi" && annonce.emploiSens === "candidate" ? t.feed.types.candidate :
+             t.feed.types[annonce.type]}
           </span>
           <span style={{ fontSize: "0.8rem", color: "#64748B" }}>
             {annonce.categoryIcon} {annonce.category}

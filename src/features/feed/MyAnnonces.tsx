@@ -1,5 +1,6 @@
 "use client";
 import { type Annonce } from "./FeedCard";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const MOCK_MY: Annonce[] = [
   {
@@ -27,19 +28,20 @@ const TYPE_COLOR: Record<string, string> = {
 };
 
 export default function MyAnnonces() {
+  const { t } = useLanguage();
   if (MOCK_MY.length === 0) return null;
 
   return (
     <div style={{ marginBottom: "32px" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px" }}>
         <h2 style={{ color: "#0F172A", fontWeight: 800, fontSize: "1rem", letterSpacing: "-0.3px" }}>
-          Mes annonces actives
+          {t.feed.myAnnonces}
         </h2>
         <button style={{
           background: "none", border: "none", cursor: "pointer",
           color: "#FF6B35", fontWeight: 600, fontSize: "0.82rem",
         }}>
-          Voir tout →
+          {t.feed.seeAll}
         </button>
       </div>
 
@@ -61,7 +63,7 @@ export default function MyAnnonces() {
               </div>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <span style={{ color: "#10B981", fontSize: "0.7rem", fontWeight: 700, backgroundColor: "#ECFDF5", padding: "2px 8px", borderRadius: "100px" }}>
-                  ● Actif
+                  ● {t.feed.active}
                 </span>
                 <span style={{ color: TYPE_COLOR[ann.type], fontWeight: 700, fontSize: "0.82rem" }}>
                   {ann.price}
@@ -79,7 +81,7 @@ export default function MyAnnonces() {
           justifyContent: "center", gap: "6px", cursor: "pointer", flexShrink: 0, padding: "14px",
         }}>
           <span style={{ color: "#CBD5E1", fontSize: "1.4rem", fontWeight: 300 }}>+</span>
-          <span style={{ color: "#94A3B8", fontSize: "0.72rem", fontWeight: 600, textAlign: "center" }}>Nouvelle annonce</span>
+          <span style={{ color: "#94A3B8", fontSize: "0.72rem", fontWeight: 600, textAlign: "center" }}>{t.feed.newAnnonce}</span>
         </div>
       </div>
     </div>

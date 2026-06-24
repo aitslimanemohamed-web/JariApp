@@ -1,16 +1,18 @@
 "use client";
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-const TYPES = [
-  { key: "service", label: "Proposer un service", icon: "🔧", color: "#FF6B35", bg: "#FFF0EB" },
-  { key: "vente",   label: "Vendre un objet",     icon: "🏷️", color: "#1B4F72", bg: "#EFF6FF" },
-  { key: "demande", label: "Publier une demande",  icon: "🔍", color: "#10B981", bg: "#ECFDF5" },
-  { key: "emploi",   label: "Offre / Recherche emploi", icon: "💼", color: "#7C3AED", bg: "#F5F3FF" },
-  { key: "location", label: "Mettre en location",       icon: "🔑", color: "#D97706", bg: "#FFFBEB" },
-];
+const TYPE_META = [
+  { key: "service",  icon: "🔧", color: "#FF6B35", bg: "#FFF0EB" },
+  { key: "vente",    icon: "🏷️", color: "#1B4F72", bg: "#EFF6FF" },
+  { key: "demande",  icon: "🔍", color: "#10B981", bg: "#ECFDF5" },
+  { key: "emploi",   icon: "💼", color: "#7C3AED", bg: "#F5F3FF" },
+  { key: "location", icon: "🔑", color: "#D97706", bg: "#FFFBEB" },
+] as const;
 
 export default function PublishBar() {
   const [open, setOpen] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <div style={{ marginBottom: "28px" }}>
@@ -46,10 +48,10 @@ export default function PublishBar() {
           </div>
           <div style={{ textAlign: "left" }}>
             <div style={{ color: "#FF6B35", fontWeight: 700, fontSize: "0.92rem" }}>
-              Publier une annonce
+              {t.feed.publishBtn}
             </div>
             <div style={{ color: "#94A3B8", fontSize: "0.78rem" }}>
-              Service · Vente · Location · Demande · Emploi
+              {t.feed.publishSubtitle}
             </div>
           </div>
         </button>
@@ -61,7 +63,7 @@ export default function PublishBar() {
         }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
             <span style={{ color: "#0F172A", fontWeight: 700, fontSize: "0.95rem" }}>
-              Que voulez-vous publier ?
+              {t.feed.publishTitle}
             </span>
             <button onClick={() => setOpen(false)} style={{
               background: "none", border: "none", cursor: "pointer",
@@ -69,20 +71,20 @@ export default function PublishBar() {
             }}>×</button>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))", gap: "10px" }}>
-            {TYPES.map(t => (
-              <button key={t.key} style={{
+            {TYPE_META.map(tm => (
+              <button key={tm.key} style={{
                 padding: "16px 10px", borderRadius: "12px", cursor: "pointer",
-                border: `1.5px solid ${t.color}33`,
-                backgroundColor: t.bg,
+                border: `1.5px solid ${tm.color}33`,
+                backgroundColor: tm.bg,
                 display: "flex", flexDirection: "column", alignItems: "center", gap: "8px",
                 transition: "all 0.15s",
               }}
               onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.02)"; }}
               onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = "none"; }}
               >
-                <span style={{ fontSize: "1.6rem" }}>{t.icon}</span>
-                <span style={{ color: t.color, fontWeight: 700, fontSize: "0.78rem", textAlign: "center", lineHeight: 1.3 }}>
-                  {t.label}
+                <span style={{ fontSize: "1.6rem" }}>{tm.icon}</span>
+                <span style={{ color: tm.color, fontWeight: 700, fontSize: "0.78rem", textAlign: "center", lineHeight: 1.3 }}>
+                  {t.feed.publish[tm.key]}
                 </span>
               </button>
             ))}

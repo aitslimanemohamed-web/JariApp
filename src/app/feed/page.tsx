@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import PublishBar from "@/features/feed/PublishBar";
@@ -10,6 +11,7 @@ import FeedSection from "@/features/feed/FeedSection";
 
 export default function FeedPage() {
   const { user, loading } = useAuth();
+  const { t } = useLanguage();
   const router = useRouter();
 
   useEffect(() => {
@@ -27,10 +29,10 @@ export default function FeedPage() {
           {/* header */}
           <div style={{ marginBottom: "28px" }}>
             <h1 style={{ color: "#0F172A", fontWeight: 900, fontSize: "clamp(1.3rem, 3vw, 1.8rem)", letterSpacing: "-0.5px", marginBottom: "4px" }}>
-              Bonjour {user.firstName} 👋
+              {t.feed.greeting} {user.firstName} 👋
             </h1>
             <p style={{ color: "#64748B", fontSize: "0.9rem" }}>
-              Que cherchez-vous aujourd'hui ?
+              {t.feed.subtitle}
             </p>
           </div>
 
@@ -41,7 +43,7 @@ export default function FeedPage() {
           <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "24px" }}>
             <div style={{ flex: 1, height: "1px", backgroundColor: "#EEF0F4" }} />
             <span style={{ color: "#94A3B8", fontSize: "0.8rem", fontWeight: 600, whiteSpace: "nowrap" }}>
-              Annonces récentes
+              {t.feed.recentAnnonces}
             </span>
             <div style={{ flex: 1, height: "1px", backgroundColor: "#EEF0F4" }} />
           </div>

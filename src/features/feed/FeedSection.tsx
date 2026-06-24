@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import FeedCard, { type Annonce, type AnnonceType } from "./FeedCard";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const MOCK_FEED: Annonce[] = [
   { id: 1, type: "service", category: "Plomberie", categoryIcon: "🔧", title: "Plombier professionnel disponible", description: "Dépannage, installation, réparation. Disponible 7j/7 à Alger centre et périphérie.", author: "Karim B.", authorInitial: "K", wilaya: "Alger", price: "2 000 DA/h", time: "Il y a 2h" },
@@ -25,17 +26,11 @@ const MOCK_FEED: Annonce[] = [
   { id: 20, type: "location", category: "Électroménager", categoryIcon: "🧹", title: "Aspirateur industriel à louer", description: "Idéal fin de chantier, nettoyage après travaux. Livraison possible.", author: "Samir B.", authorInitial: "S", wilaya: "Constantine", price: "800 DA/j", time: "Il y a 2j" },
 ];
 
-const FILTERS: { key: AnnonceType | "all"; label: string }[] = [
-  { key: "all",     label: "Tout" },
-  { key: "service", label: "Services" },
-  { key: "emploi",   label: "Emplois" },
-  { key: "location", label: "Locations" },
-  { key: "vente",    label: "Ventes" },
-  { key: "demande",  label: "Demandes" },
-];
+const FILTER_KEYS: (AnnonceType | "all")[] = ["all", "service", "emploi", "location", "vente", "demande"];
 
 export default function FeedSection() {
   const [active, setActive] = useState<AnnonceType | "all">("all");
+  const { t } = useLanguage();
 
   const filtered = active === "all" ? MOCK_FEED : MOCK_FEED.filter(a => a.type === active);
 
@@ -43,10 +38,12 @@ export default function FeedSection() {
     <div>
       {/* filtres */}
       <div style={{ display: "flex", gap: "8px", marginBottom: "20px", flexWrap: "wrap" }}>
-        {FILTERS.map(f => {
-          const isActive = active === f.key;
+        {FILTER_KEYS.map(key => {
+          const isActive = active === key;
+          const label = key === "all" ? t.feed.filters.all : t.feed.filters[key];
+          const count = key === "all" ? MOCK_FEED.length : MOCK_FEED.filter(a => a.type === key).length;
           return (
-            <button key={f.key} onClick={() => setActive(f.key)} style={{
+            <button key={key} onClick={() => setActive(key)} style={{
               padding: "8px 18px", borderRadius: "100px", cursor: "pointer",
               border: isActive ? "none" : "1.5px solid #E5E5E5",
               background: isActive ? "linear-gradient(135deg, #FF6B35, #FF5520)" : "white",
@@ -56,11 +53,9 @@ export default function FeedSection() {
               boxShadow: isActive ? "0 3px 10px rgba(255,107,53,0.3)" : "none",
               transition: "all 0.15s",
             }}>
-              {f.label}
+              {label}
               <span style={{ marginLeft: "6px", fontSize: "0.72rem", opacity: 0.75 }}>
-                ({active === f.key || f.key === "all"
-                  ? f.key === "all" ? MOCK_FEED.length : MOCK_FEED.filter(a => a.type === f.key).length
-                  : MOCK_FEED.filter(a => a.type === f.key).length})
+                ({count})
               </span>
             </button>
           );
