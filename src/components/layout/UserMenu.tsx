@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 const MENU_ITEMS = [
   { key: "profile",       icon: "👤", href: "/profile" },
+  { key: "messages",      icon: "💬", href: "/messages",     badge: 2 },
   { key: "notifications", icon: "🔔", href: "/notifications", badge: 3 },
   { key: "location",      icon: "📍", href: "/settings/location" },
   { key: "settings",      icon: "⚙️", href: "/settings" },

@@ -105,6 +105,9 @@ a { color: inherit; text-decoration: none; }
   .jari-nav-links { display: none; }
   .jari-nav-login { display: flex; gap: 6px !important; }
   .jari-nav-login a { font-size: 0.78rem !important; padding: 7px 10px !important; }
+  .jari-hidden-mobile { display: none !important; }
+  .jari-conv-sep  { display: none; }
+  .jari-back-btn  { display: flex !important; }
 
   .jari-hero-inner { padding-top: 48px; padding-bottom: 52px; }
   .jari-hero-ctas { flex-direction: column; align-items: center; }
@@ -133,6 +136,13 @@ a { color: inherit; text-decoration: none; }
 
   .jari-footer-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
 }
+
+/* ════════════════════════════════════════
+   MESSAGES
+════════════════════════════════════════ */
+.jari-conv-list { display: flex; }
+.jari-conv-sep  { display: block; }
+.jari-back-btn  { display: none !important; }
 
 /* ════════════════════════════════════════
    TABLET  (641px – 1024px)

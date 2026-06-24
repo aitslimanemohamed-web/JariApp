@@ -14,6 +14,7 @@ const translations = {
       logout: "Déconnexion",
       menu: {
         profile: "Mon profil",
+        messages: "Messages",
         notifications: "Notifications",
         location: "Ma localisation",
         settings: "Paramètres",
@@ -141,6 +142,7 @@ const translations = {
       logout: "تسجيل الخروج",
       menu: {
         profile: "ملفي الشخصي",
+        messages: "الرسائل",
         notifications: "الإشعارات",
         location: "موقعي",
         settings: "الإعدادات",
@@ -268,6 +270,7 @@ const translations = {
       logout: "Log out",
       menu: {
         profile: "My profile",
+        messages: "Messages",
         notifications: "Notifications",
         location: "My location",
         settings: "Settings",
