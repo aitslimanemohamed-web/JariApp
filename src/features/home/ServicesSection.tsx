@@ -2,14 +2,18 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const SERVICES = [
-  { icon: "🔧", color: "#FF6B35" },
-  { icon: "⚡", color: "#F59E0B" },
-  { icon: "🧹", color: "#10B981" },
-  { icon: "📚", color: "#6366F1" },
-  { icon: "🎨", color: "#EC4899" },
-  { icon: "❄️", color: "#0EA5E9" },
-  { icon: "🚗", color: "#8B5CF6" },
-  { icon: "📦", color: "#1B4F72" },
+  { icon: "🔧", color: "#FF6B35" },   // Plomberie
+  { icon: "⚡", color: "#F59E0B" },   // Électricité
+  { icon: "❄️", color: "#0EA5E9" },   // Climatisation
+  { icon: "🚗", color: "#8B5CF6" },   // Mécanique
+  { icon: "🧹", color: "#10B981" },   // Ménage
+  { icon: "📚", color: "#6366F1" },   // Cours particuliers
+  { icon: "🖌️", color: "#EC4899" },  // Peintre & Plâtrier
+  { icon: "🚖", color: "#1B4F72" },   // Chauffeur
+  { icon: "🧱", color: "#92400E" },   // Maçonnerie
+  { icon: "💻", color: "#0F766E" },   // Informatique
+  { icon: "📦", color: "#7C3AED" },   // Déménagement
+  { icon: "🔌", color: "#DC2626" },   // Électroménager
 ];
 
 export default function ServicesSection() {

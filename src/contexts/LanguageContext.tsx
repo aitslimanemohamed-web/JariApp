@@ -75,8 +75,9 @@ const translations = {
       title: "Explorez nos catégories",
       sub: "Des centaines de professionnels qualifiés dans toute l'Algérie",
       items: [
-        "Plomberie", "Électricité", "Ménage", "Cours particuliers",
-        "Peinture", "Climatisation", "Mécanique", "Déménagement",
+        "Plomberie", "Électricité", "Climatisation", "Mécanique",
+        "Ménage", "Cours particuliers", "Peintre & Plâtrier", "Chauffeur",
+        "Maçonnerie", "Informatique", "Déménagement", "Électroménager",
       ],
     },
     how: {
@@ -179,8 +180,9 @@ const translations = {
       title: "استكشف فئاتنا",
       sub: "مئات المحترفين المؤهلين في جميع أنحاء الجزائر",
       items: [
-        "سباكة", "كهرباء", "تنظيف", "دروس خاصة",
-        "دهن وديكور", "تكييف", "ميكانيكا", "نقل عفش",
+        "سباكة", "كهرباء", "تكييف", "ميكانيكا",
+        "تنظيف", "دروس خاصة", "دهان وبلاستير", "سائق",
+        "بناء وتشييد", "إعلام آلي", "نقل عفش", "إصلاح أجهزة",
       ],
     },
     how: {
@@ -283,8 +285,9 @@ const translations = {
       title: "Explore our categories",
       sub: "Hundreds of qualified professionals across Algeria",
       items: [
-        "Plumbing", "Electricity", "Cleaning", "Tutoring",
-        "Painting", "A/C & Heating", "Mechanics", "Moving",
+        "Plumbing", "Electricity", "A/C & Heating", "Car Mechanics",
+        "Cleaning", "Tutoring", "Painter & Plasterer", "Driver",
+        "Masonry", "IT Repair", "Moving", "Appliance Repair",
       ],
     },
     how: {
